@@ -91,11 +91,12 @@ function Hero() {
       {/* single background image */}
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
         <img
-          src={img2348.url}
-          alt="Pohled na Karlštejn"
+          src={img2345.url}
+          alt="Květinová Kavárna Pe&Pa pod Karlštejnem"
           className="h-full w-full object-cover"
           style={{ filter: "brightness(0.62) saturate(0.85) contrast(1.05) sepia(0.18)" }}
         />
+
         {/* readability overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/70" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.2_0.02_30/0.15)_0%,_oklch(0.15_0.02_30/0.55)_85%)]" />
