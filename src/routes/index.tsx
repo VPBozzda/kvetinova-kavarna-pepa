@@ -4,14 +4,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Lenis from "lenis";
 import { toast, Toaster } from "sonner";
 
-import img2342 from "@/assets/IMG_2342.asset.json";
-import img2343 from "@/assets/IMG_2343.asset.json";
-import img2344 from "@/assets/IMG_2344.asset.json";
-import img2345 from "@/assets/IMG_2345.asset.json";
-import img2348 from "@/assets/IMG_2348.asset.json";
-import img2349 from "@/assets/IMG_2349.asset.json";
-import img2350 from "@/assets/IMG_2350.asset.json";
-import img2351 from "@/assets/IMG_2351.asset.json";
+import { useSiteContent, type MenuItem } from "@/lib/siteContent";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,21 +25,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
-const coffee = [
-  ["Espresso", 55], ["Lungo", 60], ["Doppio", 75], ["Macchiato", 65],
-  ["Cappuccino", 65], ["Latte", 75], ["Latte Macchiato", 75],
-  ["Flat White", 85], ["Espresso Tonic", 70],
-];
-const desserts = [
-  ["Mošedaján", 79], ["Rebarborovo-jahodový koláč", 69], ["Švestkový koláč s mákem", 69],
-  ["Bábovka", 65], ["Kávová bábovka", 65],
-];
-const drinks = [
-  ["Limonáda (borůvka, máta-citron, bezinková)", 45],
-  ["Plzeň 0,3", 60], ["Víno 1dcl / 2dcl", "45 / 65"],
-  ["Prosecco", 35], ["Aperol Spritz", 125],
-];
 
 function Petals() {
   const petals = Array.from({ length: 18 });
@@ -78,62 +56,49 @@ function Petals() {
 }
 
 function Hero() {
+  const c = useSiteContent().hero;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yBack = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const yMid = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
   const yFront = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
-      {/* single background image */}
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
         <img
-          src={img2345.url}
+          src={c.bgImage}
           alt="Květinová Kavárna Pe&Pa pod Karlštejnem"
           className="h-full w-full object-cover"
           style={{ filter: "brightness(0.62) saturate(0.85) contrast(1.05) sepia(0.18)" }}
         />
-
-        {/* readability overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/70" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.2_0.02_30/0.15)_0%,_oklch(0.15_0.02_30/0.55)_85%)]" />
       </motion.div>
 
-      {/* foreground text */}
       <motion.div
         style={{ y: yFront, opacity }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">
-          Karlštejn · č.p. 16
-        </span>
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">{c.kicker}</span>
         <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
           <span className="block italic text-cream">Květinová</span>
-          <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">
-            Kavárna
-          </span>
-          <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">
-            PE &amp; PA
-          </span>
+          <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">Kavárna</span>
+          <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">PE &amp; PA</span>
         </h1>
         <p className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
-          „Děláme to celé od srdce — protože to říkáme.“
+          {c.quote}
         </p>
-        <p className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">
-          Pepina &amp; Pavla
-        </p>
+        <p className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">{c.signature}</p>
         <a
           href="#rezervace"
           className="mt-8 inline-flex items-center gap-3 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur transition hover:bg-cream hover:text-ink"
         >
-          Rezervovat stůl
+          {c.cta}
         </a>
       </motion.div>
 
-      {/* sway branches */}
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
       <div className="pointer-events-none absolute right-6 top-0 h-52 w-1 origin-top animate-sway bg-gradient-to-b from-moss/30 to-transparent" style={{ animationDelay: "1.5s" }} />
 
@@ -144,8 +109,8 @@ function Hero() {
   );
 }
 
-
 function Story() {
+  const s = useSiteContent().story;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [80, -80]);
@@ -156,13 +121,13 @@ function Story() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 md:grid-cols-2">
         <div className="relative h-[420px] md:h-[560px]">
           <motion.img
-            src={img2349.url}
+            src={s.image1}
             alt="Interiér kavárny"
             style={{ y: y1, rotate: rot }}
             className="paper-card absolute left-0 top-0 h-[72%] w-[78%] rounded-md object-cover p-2"
           />
           <motion.img
-            src={img2350.url}
+            src={s.image2}
             alt="Květiny na stole"
             style={{ y: y2 }}
             className="paper-card absolute bottom-0 right-0 h-[58%] w-[62%] rounded-md object-cover p-2"
@@ -170,22 +135,49 @@ function Story() {
         </div>
         <div>
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Naše story</span>
-          <h2 className="mt-3 text-5xl md:text-6xl">
-            Dvě dámy, <em className="text-rose">jeden</em> sen.
-          </h2>
-          <p className="mt-6 font-display text-xl leading-relaxed text-muted-foreground">
-            Pepina a Pavla otevřely Květinovou Kavárnu, aby vrátily kousek babiččiných časů
-            zpátky pod karlštejnský kopec. Květované tapety, sametové polštáře, krajkové ubrousky
-            a v každém šálku něco, co voní jako neděle.
-          </p>
-          <p className="mt-4 font-script text-3xl text-rose">— S láskou, Pe &amp; Pa</p>
+          <h2 className="mt-3 text-5xl md:text-6xl">{s.title}</h2>
+          <p className="mt-6 font-display text-xl leading-relaxed text-muted-foreground whitespace-pre-line">{s.body}</p>
+          <p className="mt-4 font-script text-3xl text-rose">{s.signoff}</p>
         </div>
       </div>
     </section>
   );
 }
 
-function MenuBoard({ title, items }: { title: string; items: [string, string | number][] }) {
+function Founders() {
+  const f = useSiteContent().founders;
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1.05, 0.98]);
+  return (
+    <section ref={ref} className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="text-center">
+          <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Zakladatelky</span>
+          <h2 className="mt-3 text-5xl md:text-6xl">Pe <em className="text-rose">&amp;</em> Pa</h2>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="paper-card relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-md p-3"
+        >
+          <motion.img
+            style={{ y, scale }}
+            src={f.image}
+            alt={f.caption}
+            className="h-[60vh] w-full rounded-sm object-cover"
+          />
+          <p className="mt-4 text-center font-script text-3xl text-rose">{f.caption}</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function MenuBoard({ title, items }: { title: string; items: MenuItem[] }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: -1 }}
@@ -197,11 +189,11 @@ function MenuBoard({ title, items }: { title: string; items: [string, string | n
       <h3 className="text-center font-script text-5xl text-chalk">{title}</h3>
       <div className="mx-auto mt-6 h-px w-24 bg-chalk/40" />
       <ul className="mt-6 space-y-3">
-        {items.map(([name, price]) => (
-          <li key={name} className="flex items-baseline gap-3 font-display text-lg text-chalk">
-            <span className="whitespace-nowrap">{name}</span>
+        {items.map((it) => (
+          <li key={it.name} className="flex items-baseline gap-3 font-display text-lg text-chalk">
+            <span className="whitespace-nowrap">{it.name}</span>
             <span className="flex-1 translate-y-[-4px] border-b border-dashed border-chalk/30" />
-            <span className="tabular-nums">{price},-</span>
+            <span className="tabular-nums">{it.price},-</span>
           </li>
         ))}
       </ul>
@@ -210,6 +202,7 @@ function MenuBoard({ title, items }: { title: string; items: [string, string | n
 }
 
 function Menu() {
+  const m = useSiteContent().menu;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
@@ -221,9 +214,9 @@ function Menu() {
           <h2 className="mt-3 text-5xl md:text-6xl">Z naší <em className="text-rose">tabule</em></h2>
         </motion.div>
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <MenuBoard title="Káva" items={coffee as [string, number][]} />
-          <MenuBoard title="Dezerty" items={desserts as [string, number][]} />
-          <MenuBoard title="Nápoje" items={drinks as [string, string | number][]} />
+          <MenuBoard title="Káva" items={m.coffee} />
+          <MenuBoard title="Dezerty" items={m.desserts} />
+          <MenuBoard title="Nápoje" items={m.drinks} />
         </div>
         <p className="mt-8 text-center font-script text-2xl text-rose">objednávky uvnitř · order at bar</p>
       </div>
@@ -232,13 +225,9 @@ function Menu() {
 }
 
 function Gallery() {
-  const items = [
-    { src: img2345.url, alt: "Zahrádka", span: "md:col-span-2 md:row-span-2", h: "h-[420px]" },
-    { src: img2342.url, alt: "Tabule káva", span: "", h: "h-[260px]" },
-    { src: img2343.url, alt: "Tabule dezerty", span: "", h: "h-[260px]" },
-    { src: img2349.url, alt: "Interiér", span: "", h: "h-[260px]" },
-    { src: img2350.url, alt: "Květiny", span: "", h: "h-[260px]" },
-  ];
+  const g = useSiteContent().gallery;
+  const layout = ["md:col-span-2 md:row-span-2", "", "", "", ""];
+  const h = ["h-[420px]", "h-[260px]", "h-[260px]", "h-[260px]", "h-[260px]"];
   return (
     <section className="relative py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
@@ -247,19 +236,19 @@ function Gallery() {
           <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         </div>
         <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4 md:auto-rows-[200px]">
-          {items.map((it, i) => (
+          {g.slice(0, 5).map((src, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.7, delay: i * 0.08 }}
-              className={`paper-card overflow-hidden rounded-md p-2 ${it.span}`}
+              className={`paper-card overflow-hidden rounded-md p-2 ${layout[i] ?? ""}`}
             >
               <img
-                src={it.src}
-                alt={it.alt}
-                className={`h-full w-full ${it.h} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
+                src={src}
+                alt={`Atmosféra ${i + 1}`}
+                className={`h-full w-full ${h[i] ?? "h-[260px]"} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
               />
             </motion.div>
           ))}
@@ -270,7 +259,8 @@ function Gallery() {
 }
 
 function Reservation() {
-  const OUT_MAX = 32, IN_MAX = 10;
+  const r = useSiteContent().reservation;
+  const OUT_MAX = r.outMax, IN_MAX = r.inMax;
   const [seating, setSeating] = useState<"venku" | "vevnitr">("venku");
   const [guests, setGuests] = useState(2);
   const [name, setName] = useState("");
@@ -302,9 +292,7 @@ function Reservation() {
         <div className="text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Rezervace</span>
           <h2 className="mt-3 text-5xl md:text-6xl">Přijďte <em className="text-rose">posedět</em></h2>
-          <p className="mt-4 font-display text-lg text-muted-foreground">
-            Venku až <strong className="text-primary">32</strong> míst, uvnitř pro intimní chvíle <strong className="text-primary">10</strong> míst.
-          </p>
+          <p className="mt-4 font-display text-lg text-muted-foreground">{r.note}</p>
         </div>
 
         <motion.form
@@ -327,7 +315,7 @@ function Reservation() {
                     : "border-border bg-cream/50 text-foreground hover:border-primary/50"
                 }`}
               >
-                {s === "venku" ? "Zahrádka · max 32" : "Uvnitř · max 10"}
+                {s === "venku" ? `Zahrádka · max ${OUT_MAX}` : `Uvnitř · max ${IN_MAX}`}
               </button>
             ))}
           </div>
@@ -374,12 +362,13 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Footer() {
+  const f = useSiteContent().footer;
   return (
     <footer className="border-t border-border bg-cream/60 py-12">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <p className="font-script text-4xl text-rose">Pe &amp; Pa</p>
-        <p className="mt-2 font-display text-lg text-muted-foreground">Karlštejn 16 · pod hradem · Česká republika</p>
-        <p className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">otevřeno denně · order at bar · objednávky uvnitř</p>
+        <p className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
+        <p className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
       </div>
     </footer>
   );
@@ -410,6 +399,7 @@ function Index() {
       <Petals />
       <Hero />
       <Story />
+      <Founders />
       <Menu />
       <Gallery />
       <Reservation />
