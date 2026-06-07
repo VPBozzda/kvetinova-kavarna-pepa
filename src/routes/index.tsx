@@ -88,49 +88,45 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
-      {/* sky / village back layer */}
+      {/* single background image */}
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
-        <img src={img2348.url} alt="Pohled na Karlštejn" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/30 via-cream/10 to-cream" />
+        <img
+          src={img2348.url}
+          alt="Pohled na Karlštejn"
+          className="h-full w-full object-cover"
+          style={{ filter: "brightness(0.62) saturate(0.85) contrast(1.05) sepia(0.18)" }}
+        />
+        {/* readability overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/70" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.2_0.02_30/0.15)_0%,_oklch(0.15_0.02_30/0.55)_85%)]" />
       </motion.div>
-
-      {/* wreath mid layer */}
-      <motion.img
-        src={img2351.url}
-        alt="Květinový věnec"
-        style={{ y: yMid }}
-        className="absolute right-[-8%] top-[8%] w-[55%] max-w-[520px] opacity-90 mix-blend-multiply md:right-[2%] md:w-[34%]"
-      />
-      <motion.img
-        src={img2344.url}
-        alt="Vchod kavárny"
-        style={{ y: yMid }}
-        className="absolute -left-10 bottom-0 hidden w-[40%] max-w-[480px] rounded-t-[40%] object-cover opacity-80 mix-blend-multiply md:block"
-      />
 
       {/* foreground text */}
       <motion.div
         style={{ y: yFront, opacity }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">
           Karlštejn · č.p. 16
         </span>
-        <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9]">
-          <span className="block italic text-primary">Květinová</span>
+        <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
+          <span className="block italic text-cream">Květinová</span>
           <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">
             Kavárna
           </span>
-          <span className="mt-2 block text-2xl tracking-[0.5em] text-ink md:text-3xl">
+          <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">
             PE &amp; PA
           </span>
         </h1>
-        <p className="mt-6 max-w-md font-display text-lg italic text-muted-foreground">
-          Pepina &amp; Pavla — káva, koláče a vůně růží pod hradem.
+        <p className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
+          „Děláme to celé od srdce — protože to říkáme.“
+        </p>
+        <p className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">
+          Pepina &amp; Pavla
         </p>
         <a
           href="#rezervace"
-          className="mt-8 inline-flex items-center gap-3 rounded-full border border-primary/40 bg-cream/80 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary backdrop-blur transition hover:bg-primary hover:text-primary-foreground"
+          className="mt-8 inline-flex items-center gap-3 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur transition hover:bg-cream hover:text-ink"
         >
           Rezervovat stůl
         </a>
@@ -140,12 +136,13 @@ function Hero() {
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
       <div className="pointer-events-none absolute right-6 top-0 h-52 w-1 origin-top animate-sway bg-gradient-to-b from-moss/30 to-transparent" style={{ animationDelay: "1.5s" }} />
 
-      <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 text-xs uppercase tracking-[0.4em] text-muted-foreground">
+      <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 text-xs uppercase tracking-[0.4em] text-cream/80">
         ↓ scroll
       </div>
     </section>
   );
 }
+
 
 function Story() {
   const ref = useRef<HTMLDivElement>(null);
