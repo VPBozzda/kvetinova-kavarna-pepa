@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_CONTENT, getPath, setPath, useSiteContent, saveSiteContent, type SiteContent, type MenuItem } from "@/lib/siteContent";
 import { Monitor, Smartphone, Tablet, LogOut, Eye, Loader2, X, Plus, Trash2, Upload, RefreshCw, Save } from "lucide-react";
