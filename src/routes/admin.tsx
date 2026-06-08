@@ -232,26 +232,17 @@ function Studio({ onSignOut }: { onSignOut: () => Promise<void> }) {
   );
 }
 
-const PreviewFrame = (() => {
-  const Inner = ({ draft }: { draft: SiteContent }, ref: React.Ref<HTMLIFrameElement>) => {
-    // Push draft into the iframe on every change via realtime is automatic for `live` content,
-    // but for draft (unsaved) we send it via postMessage and the iframe applies it locally.
-    // Simpler: we only update on save. So preview shows live (committed) content for now.
-    void draft;
-    return (
-      <iframe
-        ref={ref}
-        title="preview"
-        src="/?edit=1"
-        className="h-full w-full border-0"
-      />
-    );
-  };
-  return Object.assign(
-    require("react").forwardRef<HTMLIFrameElement, { draft: SiteContent }>(Inner),
-    {}
+const PreviewFrame = forwardRef<HTMLIFrameElement, { draft: SiteContent }>(function PreviewFrame({ draft }, ref) {
+  void draft;
+  return (
+    <iframe
+      ref={ref}
+      title="preview"
+      src="/?edit=1"
+      className="h-full w-full border-0"
+    />
   );
-})();
+});
 
 function EmptyHint({ onResetDefaults }: { onResetDefaults: () => void }) {
   return (
