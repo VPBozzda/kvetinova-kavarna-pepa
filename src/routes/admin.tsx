@@ -121,9 +121,24 @@ function Studio({ onSignOut }: { onSignOut: () => Promise<void> }) {
   }, []);
 
   function update(path: string, value: any) {
-    setDraft((d) => setPath(d, path, value));
+    setDraft((d) => {
+      const next = setPath(d, path, value);
+      iframeRef.current?.contentWindow?.postMessage({ source: "pepa-admin", type: "draft", content: next }, "*");
+      return next;
+    });
     setDirty(true);
   }
+
+  // Re-push draft whenever the iframe (re)loads
+  useEffect(() => {
+    function onMsg(e: MessageEvent) {
+      if (e.data?.source === "pepa-edit" && e.data.type === "ready") {
+        iframeRef.current?.contentWindow?.postMessage({ source: "pepa-admin", type: "draft", content: draft }, "*");
+      }
+    }
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, [draft]);
 
   async function save() {
     setSaving(true);
