@@ -97,6 +97,13 @@ function mergeDeep<T>(base: T, partial: any): T {
 async function boot() {
   if (booted || typeof window === "undefined") return;
   booted = true;
+  // Listen for draft pushes from the admin parent window (live preview while editing)
+  window.addEventListener("message", (e) => {
+    if (e.data?.source === "pepa-admin" && e.data.type === "draft" && e.data.content) {
+      current = mergeDeep(DEFAULT_CONTENT, e.data.content);
+      emit();
+    }
+  });
   try {
     const { data } = await supabase.from("site_content").select("content").eq("id", "main").maybeSingle();
     if (data?.content) {
