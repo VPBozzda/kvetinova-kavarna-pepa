@@ -5,6 +5,7 @@ import Lenis from "lenis";
 import { toast, Toaster } from "sonner";
 
 import { useSiteContent, type MenuItem } from "@/lib/siteContent";
+import { EditOverlay } from "@/components/EditOverlay";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,6 +69,8 @@ function Hero() {
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
         <img
+          data-edit-image="hero.bgImage"
+          data-edit-label="Hero pozadí"
           src={c.bgImage}
           alt="Květinová Kavárna Pe&Pa pod Karlštejnem"
           className="h-full w-full object-cover"
@@ -81,18 +84,19 @@ function Hero() {
         style={{ y: yFront, opacity }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">{c.kicker}</span>
+        <span data-edit-text="hero.kicker" data-edit-label="Kicker" className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">{c.kicker}</span>
         <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
           <span className="block italic text-cream">Květinová</span>
           <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">Kavárna</span>
           <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">PE &amp; PA</span>
         </h1>
-        <p className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
+        <p data-edit-text="hero.quote" data-edit-label="Hero citát" data-edit-multiline className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
           {c.quote}
         </p>
-        <p className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">{c.signature}</p>
+        <p data-edit-text="hero.signature" data-edit-label="Podpis" className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">{c.signature}</p>
         <a
           href="#rezervace"
+          data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
           className="mt-8 inline-flex items-center gap-3 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur transition hover:bg-cream hover:text-ink"
         >
           {c.cta}
@@ -121,12 +125,14 @@ function Story() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 md:grid-cols-2">
         <div className="relative h-[420px] md:h-[560px]">
           <motion.img
+            data-edit-image="story.image1" data-edit-label="Story obrázek 1"
             src={s.image1}
             alt="Interiér kavárny"
             style={{ y: y1, rotate: rot }}
             className="paper-card absolute left-0 top-0 h-[72%] w-[78%] rounded-md object-cover p-2"
           />
           <motion.img
+            data-edit-image="story.image2" data-edit-label="Story obrázek 2"
             src={s.image2}
             alt="Květiny na stole"
             style={{ y: y2 }}
@@ -135,9 +141,9 @@ function Story() {
         </div>
         <div>
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Naše story</span>
-          <h2 className="mt-3 text-5xl md:text-6xl">{s.title}</h2>
-          <p className="mt-6 font-display text-xl leading-relaxed text-muted-foreground whitespace-pre-line">{s.body}</p>
-          <p className="mt-4 font-script text-3xl text-rose">{s.signoff}</p>
+          <h2 data-edit-text="story.title" data-edit-label="Story nadpis" className="mt-3 text-5xl md:text-6xl">{s.title}</h2>
+          <p data-edit-text="story.body" data-edit-label="Story text" data-edit-multiline className="mt-6 font-display text-xl leading-relaxed text-muted-foreground whitespace-pre-line">{s.body}</p>
+          <p data-edit-text="story.signoff" data-edit-label="Podpis story" className="mt-4 font-script text-3xl text-rose">{s.signoff}</p>
         </div>
       </div>
     </section>
@@ -165,19 +171,20 @@ function Founders() {
           className="paper-card relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-md p-3"
         >
           <motion.img
+            data-edit-image="founders.image" data-edit-label="Zakladatelky foto"
             style={{ y, scale }}
             src={f.image}
             alt={f.caption}
             className="h-[60vh] w-full rounded-sm object-cover"
           />
-          <p className="mt-4 text-center font-script text-3xl text-rose">{f.caption}</p>
+          <p data-edit-text="founders.caption" data-edit-label="Popisek zakladatelek" className="mt-4 text-center font-script text-3xl text-rose">{f.caption}</p>
         </motion.div>
       </div>
     </section>
   );
 }
 
-function MenuBoard({ title, items }: { title: string; items: MenuItem[] }) {
+function MenuBoard({ title, items, listPath }: { title: string; items: MenuItem[]; listPath: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: -1 }}
@@ -185,12 +192,14 @@ function MenuBoard({ title, items }: { title: string; items: MenuItem[] }) {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="chalkboard p-8 md:p-10"
+      data-edit-list={listPath}
+      data-edit-label={`Menu · ${title}`}
     >
       <h3 className="text-center font-script text-5xl text-chalk">{title}</h3>
       <div className="mx-auto mt-6 h-px w-24 bg-chalk/40" />
       <ul className="mt-6 space-y-3">
-        {items.map((it) => (
-          <li key={it.name} className="flex items-baseline gap-3 font-display text-lg text-chalk">
+        {items.map((it, i) => (
+          <li key={i} className="flex items-baseline gap-3 font-display text-lg text-chalk">
             <span className="whitespace-nowrap">{it.name}</span>
             <span className="flex-1 translate-y-[-4px] border-b border-dashed border-chalk/30" />
             <span className="tabular-nums">{it.price},-</span>
@@ -214,9 +223,9 @@ function Menu() {
           <h2 className="mt-3 text-5xl md:text-6xl">Z naší <em className="text-rose">tabule</em></h2>
         </motion.div>
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <MenuBoard title="Káva" items={m.coffee} />
-          <MenuBoard title="Dezerty" items={m.desserts} />
-          <MenuBoard title="Nápoje" items={m.drinks} />
+          <MenuBoard title="Káva" items={m.coffee} listPath="menu.coffee" />
+          <MenuBoard title="Dezerty" items={m.desserts} listPath="menu.desserts" />
+          <MenuBoard title="Nápoje" items={m.drinks} listPath="menu.drinks" />
         </div>
         <p className="mt-8 text-center font-script text-2xl text-rose">objednávky uvnitř · order at bar</p>
       </div>
@@ -246,6 +255,7 @@ function Gallery() {
               className={`paper-card overflow-hidden rounded-md p-2 ${layout[i] ?? ""}`}
             >
               <img
+                data-edit-image={`gallery.${i}`} data-edit-label={`Galerie ${i + 1}`}
                 src={src}
                 alt={`Atmosféra ${i + 1}`}
                 className={`h-full w-full ${h[i] ?? "h-[260px]"} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
@@ -292,7 +302,12 @@ function Reservation() {
         <div className="text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Rezervace</span>
           <h2 className="mt-3 text-5xl md:text-6xl">Přijďte <em className="text-rose">posedět</em></h2>
-          <p className="mt-4 font-display text-lg text-muted-foreground">{r.note}</p>
+          <p data-edit-text="reservation.note" data-edit-label="Rezervace poznámka" data-edit-multiline className="mt-4 font-display text-lg text-muted-foreground">{r.note}</p>
+          <div className="mt-3 flex justify-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            <span data-edit-num="reservation.outMax" data-edit-label="Max venku" className="cursor-default">venku max {OUT_MAX}</span>
+            <span>·</span>
+            <span data-edit-num="reservation.inMax" data-edit-label="Max vevnitř" className="cursor-default">vevnitř max {IN_MAX}</span>
+          </div>
         </div>
 
         <motion.form
@@ -367,8 +382,8 @@ function Footer() {
     <footer className="border-t border-border bg-cream/60 py-12">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <p className="font-script text-4xl text-rose">Pe &amp; Pa</p>
-        <p className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
-        <p className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
+        <p data-edit-text="footer.address" data-edit-label="Adresa" className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
+        <p data-edit-text="footer.tagline" data-edit-label="Tagline" className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
       </div>
     </footer>
   );
@@ -381,7 +396,10 @@ function ScrollProgress() {
 }
 
 function Index() {
+  const editMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("edit") === "1";
+
   useEffect(() => {
+    if (editMode) return; // disable Lenis in editor for predictable clicks
     const lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -390,7 +408,7 @@ function Index() {
     function raf(time: number) { lenis.raf(time); requestAnimationFrame(raf); }
     const id = requestAnimationFrame(raf);
     return () => { cancelAnimationFrame(id); lenis.destroy(); };
-  }, []);
+  }, [editMode]);
 
   return (
     <main className="relative overflow-x-clip">
@@ -404,6 +422,7 @@ function Index() {
       <Gallery />
       <Reservation />
       <Footer />
+      {editMode && <EditOverlay />}
     </main>
   );
 }

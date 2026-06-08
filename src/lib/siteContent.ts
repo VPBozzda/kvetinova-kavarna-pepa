@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 import img2342 from "@/assets/IMG_2342.asset.json";
 import img2343 from "@/assets/IMG_2343.asset.json";
@@ -77,45 +78,85 @@ export const DEFAULT_CONTENT: SiteContent = {
   },
 };
 
-const KEY = "pepa-site-content-v1";
-const EVENT = "pepa-site-content-change";
+// ---- Reactive store ----
+let current: SiteContent = DEFAULT_CONTENT;
+const subs = new Set<() => void>();
+let booted = false;
 
-function read(): SiteContent {
-  if (typeof window === "undefined") return DEFAULT_CONTENT;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return DEFAULT_CONTENT;
-    const parsed = JSON.parse(raw);
-    // shallow merge to allow new defaults to surface
-    return { ...DEFAULT_CONTENT, ...parsed };
-  } catch {
-    return DEFAULT_CONTENT;
+function emit() { subs.forEach((cb) => cb()); }
+
+function mergeDeep<T>(base: T, partial: any): T {
+  if (!partial || typeof partial !== "object" || Array.isArray(partial)) return (partial ?? base) as T;
+  const out: any = Array.isArray(base) ? [...(base as any)] : { ...(base as any) };
+  for (const k of Object.keys(partial)) {
+    out[k] = mergeDeep((base as any)?.[k], partial[k]);
   }
+  return out as T;
 }
 
-export function saveContent(c: SiteContent) {
-  localStorage.setItem(KEY, JSON.stringify(c));
-  window.dispatchEvent(new Event(EVENT));
-}
-
-export function resetContent() {
-  localStorage.removeItem(KEY);
-  window.dispatchEvent(new Event(EVENT));
+async function boot() {
+  if (booted || typeof window === "undefined") return;
+  booted = true;
+  // Listen for draft pushes from the admin parent window (live preview while editing)
+  window.addEventListener("message", (e) => {
+    if (e.data?.source === "pepa-admin" && e.data.type === "draft" && e.data.content) {
+      current = mergeDeep(DEFAULT_CONTENT, e.data.content);
+      emit();
+    }
+  });
+  try {
+    const { data } = await supabase.from("site_content").select("content").eq("id", "main").maybeSingle();
+    if (data?.content) {
+      current = mergeDeep(DEFAULT_CONTENT, data.content);
+      emit();
+    }
+  } catch {}
+  supabase
+    .channel("site_content_main")
+    .on("postgres_changes", { event: "*", schema: "public", table: "site_content", filter: "id=eq.main" }, (payload: any) => {
+      const next = payload.new?.content;
+      if (next) {
+        current = mergeDeep(DEFAULT_CONTENT, next);
+        emit();
+      }
+    })
+    .subscribe();
 }
 
 function subscribe(cb: () => void) {
-  window.addEventListener(EVENT, cb);
-  window.addEventListener("storage", cb);
-  return () => {
-    window.removeEventListener(EVENT, cb);
-    window.removeEventListener("storage", cb);
-  };
+  subs.add(cb);
+  boot();
+  return () => { subs.delete(cb); };
 }
 
 export function useSiteContent(): SiteContent {
-  return useSyncExternalStore(subscribe, read, () => DEFAULT_CONTENT);
+  return useSyncExternalStore(subscribe, () => current, () => DEFAULT_CONTENT);
 }
 
-export function getSiteContent(): SiteContent {
-  return read();
+export function getSiteContent(): SiteContent { return current; }
+
+export async function saveSiteContent(c: SiteContent) {
+  current = c;
+  emit();
+  const { error } = await supabase.from("site_content").upsert({ id: "main", content: c, updated_at: new Date().toISOString() });
+  if (error) throw error;
+}
+
+// Helper: set value at dot-path "hero.quote" or "menu.coffee.0.name"
+export function setPath(obj: any, path: string, value: any): any {
+  const keys = path.split(".");
+  const root = Array.isArray(obj) ? [...obj] : { ...obj };
+  let cur = root;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const k = keys[i];
+    const v = cur[k];
+    cur[k] = Array.isArray(v) ? [...v] : { ...v };
+    cur = cur[k];
+  }
+  cur[keys[keys.length - 1]] = value;
+  return root;
+}
+
+export function getPath(obj: any, path: string): any {
+  return path.split(".").reduce((a, k) => a?.[k], obj);
 }
