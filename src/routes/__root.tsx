@@ -1,3 +1,5 @@
+import Footer from '../components/Footer';
+import CookieConsent from '../components/CookieConsent';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
