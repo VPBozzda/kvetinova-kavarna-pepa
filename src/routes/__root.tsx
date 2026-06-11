@@ -1,5 +1,3 @@
-import Footer from '../components/Footer';
-import CookieConsent from '../components/cookie-consent';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -121,14 +119,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        {/* Obsah samotného webu se vykreslí zde */}
         <div className="flex-1">
           <Outlet />
         </div>
-        
-        {/* Právní náležitosti přidané na konec struktury */}
-        <Footer />
-        <CookieConsent />
       </div>
     </QueryClientProvider>
   );
