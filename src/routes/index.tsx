@@ -6,6 +6,9 @@ import { toast, Toaster } from "sonner";
 
 import { useSiteContent, type MenuItem } from "@/lib/siteContent";
 import { EditOverlay } from "@/components/EditOverlay";
+import { CookieBanner } from "@/components/CookieBanner";
+import { Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
