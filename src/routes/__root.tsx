@@ -86,8 +86,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Květinová Kavárna Pe&Pa — Karlštejn 16" },
       { name: "twitter:description", content: "Romantická kavárna pod Karlštejnem s poctivou kávou a domácími dezerty." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/965b3946-0a03-464a-a248-71c3bc2aa0e6/id-preview-624a6454--4d67a52f-e290-416b-baa6-047735bfbc54.lovable.app-1781377978201.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/965b3946-0a03-464a-a248-71c3bc2aa0e6/id-preview-624a6454--4d67a52f-e290-416b-baa6-047735bfbc54.lovable.app-1781377978201.png" },
     ],
     links: [
       {
