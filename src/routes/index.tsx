@@ -251,34 +251,47 @@ function Menu() {
 
 function Gallery() {
   const g = useSiteContent().gallery;
-  const layout = ["md:col-span-2 md:row-span-2", "", "", "", ""];
-  const h = ["h-[420px]", "h-[260px]", "h-[260px]", "h-[260px]", "h-[260px]"];
+  const ref = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const [maxX, setMaxX] = useState(0);
+
+  useEffect(() => {
+    const calc = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, [g.length]);
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
+
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center">
+    <section ref={ref} className="relative" style={{ height: `${Math.max(100, 100 + (maxX / window.innerWidth) * 100)}vh` }}>
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="px-6 text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
           <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         </div>
-        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4 md:auto-rows-[200px]">
-          {g.slice(0, 5).map((src, i) => (
-            <motion.div
+        <motion.div ref={trackRef} style={{ x }} className="mt-10 flex gap-6 px-[10vw] will-change-transform">
+          {g.map((src, i) => (
+            <div
               key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: i * 0.08 }}
-              className={`paper-card overflow-hidden rounded-md p-2 ${layout[i] ?? ""}`}
+              className="paper-card shrink-0 overflow-hidden rounded-md p-2"
+              style={{ width: "min(70vw, 520px)" }}
             >
               <img
                 data-edit-image={`gallery.${i}`} data-edit-label={`Galerie ${i + 1}`}
                 src={src}
                 alt={`Atmosféra ${i + 1}`}
-                className={`h-full w-full ${h[i] ?? "h-[260px]"} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
+                className="h-[60vh] w-full rounded-sm object-cover"
               />
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
