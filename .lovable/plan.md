@@ -1,21 +1,30 @@
-## Co se děje
+## Plán
 
-Z runtime logu vidím, že preview crashuje na **hydration mismatch** v `Hero` sekci na `/`:
+1. **Odpojit smazaný backend z veřejného webu**
+   - Upravit obsahový store tak, aby web používal lokální `DEFAULT_CONTENT` a nepokoušel se načítat `site_content` z backendu ani otevírat realtime kanál.
+   - Tím se odstraní riziko pádů/404 způsobených neexistujícím backendovým projektem.
 
-- Server vyrenderuje aktuální verzi: `<section>` Hero (bez padajících lístků).
-- Klient ale začne renderovat **starou** verzi, která ještě měla `<Petals />` jako první prvek.
-- React tu nesoulad nedokáže smířit, zahodí celý strom → uživatel vidí prázdno / "Not Found".
+2. **Odstranit rezervační hero/sekci**
+   - Smazat rezervační formulář ze stránky `/`.
+   - Odstranit jeho volání z homepage.
+   - Odstranit tlačítko v intro hero, které teď míří na `#rezervace`, aby nevedlo na neexistující sekci.
+   - Odebrat import backend klienta a nepotřebný `toast/Toaster`, pokud už nebude použitý.
 
-Padající lístky jsou ve zdroji už správně odstraněné (`Petals` je definovaný, ale nikde se nevolá), takže problém není v kódu, ale v tom, že sandbox dev server drží zabuffrovanou starou transformaci modulu `src/routes/index.tsx` (HMR gate ji uvolní teprve na konci tahu).
+3. **Přidat nový textový komponent „S Sebou“ do intro hero**
+   - Do intro hero vložit samostatný vizuální textový prvek s textem `S Sebou`.
+   - Umístit ho tak, aby působil jako součást aranžmá hero hlavičky, ne jako rezervační CTA.
 
-## Oprava
+4. **Vyčistit zbytečné věci po odstranění backendu**
+   - Odpojit globální auth middleware ze `src/start.ts`, protože po smazání backendu není potřeba připojovat auth tokeny ke server funkcím.
+   - Ponechat auto-generované integrační soubory beze změny, ale zajistit, aby je veřejná homepage už nenačítala.
+   - Podle potřeby odstranit nepoužívané rezervační typy z lokálního content modelu, pokud po odstranění sekce zůstanou mrtvé.
 
-1. **Flush HMR gate** přes `curl -sf -X POST http://localhost:8080/__hmr_flush`, aby se aktuální `index.tsx` přetransformoval a preview reloadlo.
-2. **Smazat nepoužitý `Petals` komponent** ze `src/routes/index.tsx` (řádky ~33–60) — tím se zajistí, že žádný budoucí HMR mismatch ani omylem znovu nevytáhne starý strom.
-3. **Ověřit přes browser screenshot na `/` (508×927)**, že hero se vykreslí (Karlštejn · č.p. 16, název kavárny, nový text, tlačítko „Chci rezervovat místo"), bez 404 a bez hydration erroru v konzoli.
+5. **Opravit zdroj Not Found v preview/published**
+   - Zkontrolovat route konfiguraci a SSR entry nastavení.
+   - Upravit `vite.config.ts`, aby používal správný TanStack Start server entry wrapper (`src/server.ts`), protože špatný server entry může na publikované/preview verzi maskovat chyby jako `Not Found`.
+   - Zachovat stávající route soubory a needitovat generovaný `routeTree.gen.ts`.
 
-## Co se nemění
-
-- Žádné úpravy obsahu, layoutu, stylů ani backendu.
-- `site_content` v DB zůstává `{}` (web tedy bere `DEFAULT_CONTENT`, jak má).
-- `/admin`, rezervace, cookie banner, ochrana osobních údajů — vše beze změny.
+6. **Ověření**
+   - Flushnout HMR cache preview serveru.
+   - Zkontrolovat `/` v preview, že už neukazuje `Not Found`, homepage se vykreslí, sekce rezervace zmizela a v hero je `S Sebou`.
+   - Pokud preview pořád hlásí chybu, přečíst aktuální dev-server log a opravit konkrétní runtime/build problém.

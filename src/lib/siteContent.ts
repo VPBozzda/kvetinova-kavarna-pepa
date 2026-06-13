@@ -1,5 +1,4 @@
 import { useSyncExternalStore } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 import img2342 from "@/assets/IMG_2342.asset.json";
 import img2343 from "@/assets/IMG_2343.asset.json";
@@ -95,7 +94,7 @@ function mergeDeep<T>(base: T, partial: any): T {
   return out as T;
 }
 
-async function boot() {
+function boot() {
   if (booted || typeof window === "undefined") return;
   booted = true;
   // Listen for draft pushes from the admin parent window (live preview while editing)
@@ -105,23 +104,6 @@ async function boot() {
       emit();
     }
   });
-  try {
-    const { data } = await supabase.from("site_content").select("content").eq("id", "main").maybeSingle();
-    if (data?.content) {
-      current = mergeDeep(DEFAULT_CONTENT, data.content);
-      emit();
-    }
-  } catch {}
-  supabase
-    .channel("site_content_main")
-    .on("postgres_changes", { event: "*", schema: "public", table: "site_content", filter: "id=eq.main" }, (payload: any) => {
-      const next = payload.new?.content;
-      if (next) {
-        current = mergeDeep(DEFAULT_CONTENT, next);
-        emit();
-      }
-    })
-    .subscribe();
 }
 
 function subscribe(cb: () => void) {
@@ -139,8 +121,6 @@ export function getSiteContent(): SiteContent { return current; }
 export async function saveSiteContent(c: SiteContent) {
   current = c;
   emit();
-  const { error } = await supabase.from("site_content").upsert({ id: "main", content: c, updated_at: new Date().toISOString() });
-  if (error) throw error;
 }
 
 // Helper: set value at dot-path "hero.quote" or "menu.coffee.0.name"
