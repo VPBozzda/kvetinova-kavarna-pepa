@@ -431,6 +431,15 @@ function Footer() {
         <p className="font-script text-4xl text-rose">Pe &amp; Pa</p>
         <p data-edit-text="footer.address" data-edit-label="Adresa" className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
         <p data-edit-text="footer.tagline" data-edit-label="Tagline" className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
+        <div className="mx-auto mt-6 h-px w-16 bg-border" />
+        <p className="mt-4 font-sans-ui text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          IČ: 24648744 · zapsán v živnostenském rejstříku
+        </p>
+        <p className="mt-2 font-sans-ui text-[11px] tracking-wide">
+          <Link to="/ochrana-osobnich-udaju" className="text-muted-foreground underline decoration-rose/60 underline-offset-4 hover:text-rose">
+            Ochrana osobních údajů &amp; cookies
+          </Link>
+        </p>
       </div>
     </footer>
   );
@@ -469,6 +478,7 @@ function Index() {
       <Gallery />
       <Reservation />
       <Footer />
+      {!editMode && <CookieBanner />}
       {editMode && <EditOverlay />}
     </main>
   );
