@@ -289,12 +289,13 @@ function Reservation() {
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const cap = seating === "venku" ? OUT_MAX : IN_MAX;
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !phone || !date || !time) {
+    if (!name.trim() || !phone.trim() || !date || !time) {
       toast.error("Vyplňte prosím všechna pole.");
       return;
     }
@@ -302,10 +303,43 @@ function Reservation() {
       toast.error(`Maximum pro ${seating} je ${cap} hostů.`);
       return;
     }
-    toast.success(`Děkujeme, ${name}! Rezervace pro ${guests} ${seating === "venku" ? "venku" : "vevnitř"} přijata.`, {
-      description: `${date} v ${time} · ozveme se na ${phone}.`,
-    });
-    setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
+    const zone = seating === "venku" ? "zahradka" : "uvnitr";
+    const dt = new Date(`${date}T${time}:00`);
+    if (isNaN(dt.getTime())) { toast.error("Neplatný datum nebo čas."); return; }
+    if (dt.getTime() < Date.now() - 60_000) { toast.error("Vyberte prosím budoucí termín."); return; }
+
+    setSubmitting(true);
+    try {
+      const { data: capRes, error: capErr } = await supabase.rpc("check_reservation_capacity", {
+        _zone: zone, _date_time: dt.toISOString(), _guests: guests,
+      });
+      if (capErr) throw capErr;
+      const info = capRes as { fits: boolean; available: number; capacity: number };
+      if (!info.fits) {
+        toast.error("V tomto čase je již plno.", {
+          description: `Volných míst v této zóně: ${Math.max(0, info.available)} z ${info.capacity}. Zkuste prosím jiný čas.`,
+        });
+        setSubmitting(false);
+        return;
+      }
+      const { error } = await supabase.from("reservations").insert({
+        name: name.trim(),
+        phone: phone.trim(),
+        date_time: dt.toISOString(),
+        guests_count: guests,
+        zone,
+      });
+      if (error) throw error;
+      toast.success(`Děkujeme, ${name}! Rezervace přijata.`, {
+        description: `${date} v ${time} · ${guests} ${seating === "venku" ? "venku" : "vevnitř"} · ozveme se na ${phone}.`,
+      });
+      setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Rezervaci se nepodařilo uložit.", { description: err?.message ?? "Zkuste to prosím znovu." });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
