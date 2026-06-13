@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ZasadyOchranyOsobnichUdajuRouteImport } from './routes/zasady-ochrany-osobnich-udaju'
 import { Route as PodminkyUzitiRouteImport } from './routes/podminky-uziti'
+import { Route as OchranaOsobnichUdajuRouteImport } from './routes/ochrana-osobnich-udaju'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -23,6 +24,11 @@ const ZasadyOchranyOsobnichUdajuRoute =
 const PodminkyUzitiRoute = PodminkyUzitiRouteImport.update({
   id: '/podminky-uziti',
   path: '/podminky-uziti',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OchranaOsobnichUdajuRoute = OchranaOsobnichUdajuRouteImport.update({
+  id: '/ochrana-osobnich-udaju',
+  path: '/ochrana-osobnich-udaju',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -39,12 +45,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
   '/podminky-uziti': typeof PodminkyUzitiRoute
   '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
   '/podminky-uziti': typeof PodminkyUzitiRoute
   '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
@@ -52,6 +60,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
   '/podminky-uziti': typeof PodminkyUzitiRoute
   '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
@@ -60,14 +69,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/ochrana-osobnich-udaju'
     | '/podminky-uziti'
     | '/zasady-ochrany-osobnich-udaju'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/podminky-uziti' | '/zasady-ochrany-osobnich-udaju'
+  to:
+    | '/'
+    | '/admin'
+    | '/ochrana-osobnich-udaju'
+    | '/podminky-uziti'
+    | '/zasady-ochrany-osobnich-udaju'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/ochrana-osobnich-udaju'
     | '/podminky-uziti'
     | '/zasady-ochrany-osobnich-udaju'
   fileRoutesById: FileRoutesById
@@ -75,6 +91,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  OchranaOsobnichUdajuRoute: typeof OchranaOsobnichUdajuRoute
   PodminkyUzitiRoute: typeof PodminkyUzitiRoute
   ZasadyOchranyOsobnichUdajuRoute: typeof ZasadyOchranyOsobnichUdajuRoute
 }
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/podminky-uziti'
       fullPath: '/podminky-uziti'
       preLoaderRoute: typeof PodminkyUzitiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ochrana-osobnich-udaju': {
+      id: '/ochrana-osobnich-udaju'
+      path: '/ochrana-osobnich-udaju'
+      fullPath: '/ochrana-osobnich-udaju'
+      preLoaderRoute: typeof OchranaOsobnichUdajuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -115,6 +139,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  OchranaOsobnichUdajuRoute: OchranaOsobnichUdajuRoute,
   PodminkyUzitiRoute: PodminkyUzitiRoute,
   ZasadyOchranyOsobnichUdajuRoute: ZasadyOchranyOsobnichUdajuRoute,
 }

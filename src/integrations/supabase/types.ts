@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      reservations: {
+        Row: {
+          created_at: string
+          date_time: string
+          guests_count: number
+          id: string
+          name: string
+          phone: string
+          zone: Database["public"]["Enums"]["reservation_zone"]
+        }
+        Insert: {
+          created_at?: string
+          date_time: string
+          guests_count: number
+          id?: string
+          name: string
+          phone: string
+          zone: Database["public"]["Enums"]["reservation_zone"]
+        }
+        Update: {
+          created_at?: string
+          date_time?: string
+          guests_count?: number
+          id?: string
+          name?: string
+          phone?: string
+          zone?: Database["public"]["Enums"]["reservation_zone"]
+        }
+        Relationships: []
+      }
       site_content: {
         Row: {
           content: Json
@@ -55,6 +85,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_reservation_capacity: {
+        Args: {
+          _date_time: string
+          _guests: number
+          _zone: Database["public"]["Enums"]["reservation_zone"]
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -65,6 +103,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin"
+      reservation_zone: "zahradka" | "uvnitr"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -193,6 +232,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin"],
+      reservation_zone: ["zahradka", "uvnitr"],
     },
   },
 } as const

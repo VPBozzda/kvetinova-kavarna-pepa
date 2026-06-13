@@ -6,6 +6,9 @@ import { toast, Toaster } from "sonner";
 
 import { useSiteContent, type MenuItem } from "@/lib/siteContent";
 import { EditOverlay } from "@/components/EditOverlay";
+import { CookieBanner } from "@/components/CookieBanner";
+import { Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -85,18 +88,23 @@ function Hero() {
         className="relative z-10 flex h-full flex-col px-6"
       >
         <div className="pt-8 md:pt-10">
-          <h1 className="text-left leading-[0.95] drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
-            <span className="block italic text-cream text-2xl md:text-3xl">Květinová</span>
-            <span className="font-script -mt-1 block text-rose text-3xl md:text-4xl">Kavárna</span>
-            <span className="mt-1 block text-[10px] tracking-[0.45em] text-cream/90 md:text-xs">PE &amp; PA</span>
-          </h1>
-          <span data-edit-text="hero.kicker" data-edit-label="Kicker" className="mt-2 block font-sans-ui text-[10px] uppercase tracking-[0.4em] text-cream/80">{c.kicker}</span>
+          <span data-edit-text="hero.kicker" data-edit-label="Adresa / kicker" className="block font-sans-ui text-[10px] uppercase tracking-[0.45em] text-cream/85 md:text-xs">{c.kicker}</span>
+          <p className="mt-2 text-left leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
+            <span className="block italic text-cream text-lg md:text-xl">Květinová</span>
+            <span className="font-script -mt-1 block text-rose text-2xl md:text-3xl">Kavárna</span>
+            <span className="mt-1 block text-[9px] tracking-[0.45em] text-cream/80 md:text-[11px]">PE &amp; PA</span>
+          </p>
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <p data-edit-text="hero.quote" data-edit-label="Hero text" data-edit-multiline className="max-w-xl font-display text-xl italic text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] md:text-2xl">
+          <h1
+            data-edit-text="hero.quote"
+            data-edit-label="Hlavní nadpis"
+            data-edit-multiline
+            className="max-w-2xl font-display text-3xl italic leading-snug text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-5xl"
+          >
             {c.quote}
-          </p>
+          </h1>
           <a
             href="#rezervace"
             data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
@@ -281,12 +289,13 @@ function Reservation() {
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const cap = seating === "venku" ? OUT_MAX : IN_MAX;
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !phone || !date || !time) {
+    if (!name.trim() || !phone.trim() || !date || !time) {
       toast.error("Vyplňte prosím všechna pole.");
       return;
     }
@@ -294,10 +303,43 @@ function Reservation() {
       toast.error(`Maximum pro ${seating} je ${cap} hostů.`);
       return;
     }
-    toast.success(`Děkujeme, ${name}! Rezervace pro ${guests} ${seating === "venku" ? "venku" : "vevnitř"} přijata.`, {
-      description: `${date} v ${time} · ozveme se na ${phone}.`,
-    });
-    setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
+    const zone = seating === "venku" ? "zahradka" : "uvnitr";
+    const dt = new Date(`${date}T${time}:00`);
+    if (isNaN(dt.getTime())) { toast.error("Neplatný datum nebo čas."); return; }
+    if (dt.getTime() < Date.now() - 60_000) { toast.error("Vyberte prosím budoucí termín."); return; }
+
+    setSubmitting(true);
+    try {
+      const { data: capRes, error: capErr } = await supabase.rpc("check_reservation_capacity", {
+        _zone: zone, _date_time: dt.toISOString(), _guests: guests,
+      });
+      if (capErr) throw capErr;
+      const info = capRes as { fits: boolean; available: number; capacity: number };
+      if (!info.fits) {
+        toast.error("V tomto čase je již plno.", {
+          description: `Volných míst v této zóně: ${Math.max(0, info.available)} z ${info.capacity}. Zkuste prosím jiný čas.`,
+        });
+        setSubmitting(false);
+        return;
+      }
+      const { error } = await supabase.from("reservations").insert({
+        name: name.trim(),
+        phone: phone.trim(),
+        date_time: dt.toISOString(),
+        guests_count: guests,
+        zone,
+      });
+      if (error) throw error;
+      toast.success(`Děkujeme, ${name}! Rezervace přijata.`, {
+        description: `${date} v ${time} · ${guests} ${seating === "venku" ? "venku" : "vevnitř"} · ozveme se na ${phone}.`,
+      });
+      setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Rezervaci se nepodařilo uložit.", { description: err?.message ?? "Zkuste to prosím znovu." });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -359,9 +401,10 @@ function Reservation() {
 
           <button
             type="submit"
-            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent"
+            disabled={submitting}
+            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent disabled:opacity-60"
           >
-            Rezervovat
+            {submitting ? "Odesílám…" : "Rezervovat"}
           </button>
         </motion.form>
       </div>
@@ -388,6 +431,15 @@ function Footer() {
         <p className="font-script text-4xl text-rose">Pe &amp; Pa</p>
         <p data-edit-text="footer.address" data-edit-label="Adresa" className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
         <p data-edit-text="footer.tagline" data-edit-label="Tagline" className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
+        <div className="mx-auto mt-6 h-px w-16 bg-border" />
+        <p className="mt-4 font-sans-ui text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          IČ: 24648744 · zapsán v živnostenském rejstříku
+        </p>
+        <p className="mt-2 font-sans-ui text-[11px] tracking-wide">
+          <Link to="/ochrana-osobnich-udaju" className="text-muted-foreground underline decoration-rose/60 underline-offset-4 hover:text-rose">
+            Ochrana osobních údajů &amp; cookies
+          </Link>
+        </p>
       </div>
     </footer>
   );
@@ -426,6 +478,7 @@ function Index() {
       <Gallery />
       <Reservation />
       <Footer />
+      {!editMode && <CookieBanner />}
       {editMode && <EditOverlay />}
     </main>
   );
