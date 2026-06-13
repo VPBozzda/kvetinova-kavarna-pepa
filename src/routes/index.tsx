@@ -401,9 +401,10 @@ function Reservation() {
 
           <button
             type="submit"
-            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent"
+            disabled={submitting}
+            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent disabled:opacity-60"
           >
-            Rezervovat
+            {submitting ? "Odesílám…" : "Rezervovat"}
           </button>
         </motion.form>
       </div>
