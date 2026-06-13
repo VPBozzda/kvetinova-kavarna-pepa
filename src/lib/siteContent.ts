@@ -24,7 +24,7 @@ export type SiteContent = {
 export const DEFAULT_CONTENT: SiteContent = {
   hero: {
     kicker: "Karlštejn · č.p. 16",
-    quote: "„Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn. Vše děláme ručně, pomalu a od srdce.“",
+    quote: "Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn. Vše děláme ručně, pomalu a od srdce.",
     signature: "",
     cta: "Chci rezervovat místo",
     bgImage: img2345.url,
