@@ -79,13 +79,9 @@ function Hero() {
           {c.quote}
         </p>
 
-        <a
-          href="#rezervace"
-          data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
-          className="mt-8 inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-ink/30 transition hover:bg-accent"
-        >
-          {c.cta}
-        </a>
+        <p className="mt-10 font-script text-5xl text-rose drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] md:text-6xl">
+          S Sebou
+        </p>
       </motion.div>
 
 
