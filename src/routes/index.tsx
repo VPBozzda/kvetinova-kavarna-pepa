@@ -79,8 +79,8 @@ function Hero() {
           {c.quote}
         </p>
 
-        <p className="mt-16 inline-flex items-center gap-2 rounded-full border border-cream/25 bg-ink/30 px-5 py-2.5 backdrop-blur-sm font-sans-ui text-sm font-medium uppercase tracking-[0.2em] text-cream/90 shadow-[0_4px_20px_rgba(0,0,0,0.2)] md:mt-20 md:px-6 md:py-3 md:text-base">
-          S Sebou
+        <p className="mt-16 max-w-md rounded-md border border-cream/25 bg-ink/40 px-6 py-4 backdrop-blur-sm font-sans-ui text-sm font-medium text-cream/95 shadow-[0_4px_20px_rgba(0,0,0,0.25)] md:mt-20 md:text-base">
+          Všechny naše dobroty vám rádi zabalíme i s sebou na hrad.
         </p>
       </motion.div>
 
