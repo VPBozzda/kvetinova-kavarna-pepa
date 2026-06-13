@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Poctivá káva a babiččiny koláče | Květinová Kavárna Pe&Pa" },
+      { name: "description", content: "A responsive, animated website for Květinová Kavárna Pe&Pa, featuring a 2.5D design and parallax scrolling." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Poctivá káva a babiččiny koláče | Květinová Kavárna Pe&Pa" },
+      { property: "og:description", content: "A responsive, animated website for Květinová Kavárna Pe&Pa, featuring a 2.5D design and parallax scrolling." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Poctivá káva a babiččiny koláče | Květinová Kavárna Pe&Pa" },
+      { name: "twitter:description", content: "A responsive, animated website for Květinová Kavárna Pe&Pa, featuring a 2.5D design and parallax scrolling." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/965b3946-0a03-464a-a248-71c3bc2aa0e6/id-preview-624a6454--4d67a52f-e290-416b-baa6-047735bfbc54.lovable.app-1781377978201.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/965b3946-0a03-464a-a248-71c3bc2aa0e6/id-preview-624a6454--4d67a52f-e290-416b-baa6-047735bfbc54.lovable.app-1781377978201.png" },
     ],
     links: [
       {
