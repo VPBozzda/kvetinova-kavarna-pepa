@@ -85,35 +85,39 @@ function Hero() {
 
       <motion.div
         style={{ y: yFront, opacity }}
-        className="relative z-10 flex h-full flex-col px-6"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <div className="pt-8 md:pt-10">
-          <span data-edit-text="hero.kicker" data-edit-label="Adresa / kicker" className="block font-sans-ui text-[10px] uppercase tracking-[0.45em] text-cream/85 md:text-xs">{c.kicker}</span>
-          <p className="mt-2 text-left leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
-            <span className="block italic text-cream text-lg md:text-xl">Květinová</span>
-            <span className="font-script -mt-1 block text-rose text-2xl md:text-3xl">Kavárna</span>
-            <span className="mt-1 block text-[9px] tracking-[0.45em] text-cream/80 md:text-[11px]">PE &amp; PA</span>
-          </p>
-        </div>
+        <span
+          data-edit-text="hero.kicker"
+          data-edit-label="Adresa / kicker"
+          className="block font-sans-ui text-[13px] uppercase tracking-[0.45em] text-cream/85 md:text-base"
+        >
+          {c.kicker}
+        </span>
+        <p className="mt-4 leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
+          <span className="block italic text-cream text-3xl md:text-5xl">Květinová</span>
+          <span className="font-script -mt-1 block text-rose text-5xl md:text-7xl">Kavárna</span>
+          <span className="mt-2 block text-[11px] tracking-[0.45em] text-cream/80 md:text-sm">PE &amp; PA</span>
+        </p>
 
-        <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <h1
-            data-edit-text="hero.quote"
-            data-edit-label="Hlavní nadpis"
-            data-edit-multiline
-            className="max-w-2xl font-display text-3xl italic leading-snug text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-5xl"
-          >
-            {c.quote}
-          </h1>
-          <a
-            href="#rezervace"
-            data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
-            className="mt-8 inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-ink/30 transition hover:bg-accent"
-          >
-            {c.cta}
-          </a>
-        </div>
+        <p
+          data-edit-text="hero.quote"
+          data-edit-label="Hlavní text"
+          data-edit-multiline
+          className="mt-10 max-w-xl font-display text-lg leading-relaxed text-cream/95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-2xl"
+        >
+          {c.quote}
+        </p>
+
+        <a
+          href="#rezervace"
+          data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
+          className="mt-8 inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-ink/30 transition hover:bg-accent"
+        >
+          {c.cta}
+        </a>
       </motion.div>
+
 
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
       <div className="pointer-events-none absolute right-6 top-0 h-52 w-1 origin-top animate-sway bg-gradient-to-b from-moss/30 to-transparent" style={{ animationDelay: "1.5s" }} />
@@ -247,34 +251,47 @@ function Menu() {
 
 function Gallery() {
   const g = useSiteContent().gallery;
-  const layout = ["md:col-span-2 md:row-span-2", "", "", "", ""];
-  const h = ["h-[420px]", "h-[260px]", "h-[260px]", "h-[260px]", "h-[260px]"];
+  const ref = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const [maxX, setMaxX] = useState(0);
+
+  useEffect(() => {
+    const calc = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, [g.length]);
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
+
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center">
+    <section ref={ref} className="relative" style={{ height: `${100 + (typeof window !== "undefined" && window.innerWidth ? (maxX / window.innerWidth) * 100 : 0)}vh` }}>
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="px-6 text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
           <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         </div>
-        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4 md:auto-rows-[200px]">
-          {g.slice(0, 5).map((src, i) => (
-            <motion.div
+        <motion.div ref={trackRef} style={{ x }} className="mt-10 flex gap-6 px-[10vw] will-change-transform">
+          {g.map((src, i) => (
+            <div
               key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: i * 0.08 }}
-              className={`paper-card overflow-hidden rounded-md p-2 ${layout[i] ?? ""}`}
+              className="paper-card shrink-0 overflow-hidden rounded-md p-2"
+              style={{ width: "min(70vw, 520px)" }}
             >
               <img
                 data-edit-image={`gallery.${i}`} data-edit-label={`Galerie ${i + 1}`}
                 src={src}
                 alt={`Atmosféra ${i + 1}`}
-                className={`h-full w-full ${h[i] ?? "h-[260px]"} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
+                className="h-[60vh] w-full rounded-sm object-cover"
               />
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -437,7 +454,7 @@ function Footer() {
         </p>
         <p className="mt-2 font-sans-ui text-[11px] tracking-wide">
           <Link to="/ochrana-osobnich-udaju" className="text-muted-foreground underline decoration-rose/60 underline-offset-4 hover:text-rose">
-            Ochrana osobních údajů &amp; cookies
+            Ochrana osobních údajů
           </Link>
         </p>
       </div>
@@ -470,7 +487,7 @@ function Index() {
     <main className="relative overflow-x-clip">
       <Toaster position="top-center" richColors />
       <ScrollProgress />
-      <Petals />
+      
       <Hero />
       <Story />
       <Founders />
