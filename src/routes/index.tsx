@@ -263,148 +263,6 @@ function Gallery() {
   );
 }
 
-function Reservation() {
-  const r = useSiteContent().reservation;
-  const OUT_MAX = r.outMax, IN_MAX = r.inMax;
-  const [seating, setSeating] = useState<"venku" | "vevnitr">("venku");
-  const [guests, setGuests] = useState(2);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const cap = seating === "venku" ? OUT_MAX : IN_MAX;
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!name.trim() || !phone.trim() || !date || !time) {
-      toast.error("Vyplňte prosím všechna pole.");
-      return;
-    }
-    if (guests > cap) {
-      toast.error(`Maximum pro ${seating} je ${cap} hostů.`);
-      return;
-    }
-    const zone = seating === "venku" ? "zahradka" : "uvnitr";
-    const dt = new Date(`${date}T${time}:00`);
-    if (isNaN(dt.getTime())) { toast.error("Neplatný datum nebo čas."); return; }
-    if (dt.getTime() < Date.now() - 60_000) { toast.error("Vyberte prosím budoucí termín."); return; }
-
-    setSubmitting(true);
-    try {
-      const { data: capRes, error: capErr } = await supabase.rpc("check_reservation_capacity", {
-        _zone: zone, _date_time: dt.toISOString(), _guests: guests,
-      });
-      if (capErr) throw capErr;
-      const info = capRes as { fits: boolean; available: number; capacity: number };
-      if (!info.fits) {
-        toast.error("V tomto čase je již plno.", {
-          description: `Volných míst v této zóně: ${Math.max(0, info.available)} z ${info.capacity}. Zkuste prosím jiný čas.`,
-        });
-        setSubmitting(false);
-        return;
-      }
-      const { error } = await supabase.from("reservations").insert({
-        name: name.trim(),
-        phone: phone.trim(),
-        date_time: dt.toISOString(),
-        guests_count: guests,
-        zone,
-      });
-      if (error) throw error;
-      toast.success(`Děkujeme, ${name}! Rezervace přijata.`, {
-        description: `${date} v ${time} · ${guests} ${seating === "venku" ? "venku" : "vevnitř"} · ozveme se na ${phone}.`,
-      });
-      setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Rezervaci se nepodařilo uložit.", { description: err?.message ?? "Zkuste to prosím znovu." });
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <section id="rezervace" className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-3xl px-6">
-        <div className="text-center">
-          <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Rezervace</span>
-          <h2 className="mt-3 text-5xl md:text-6xl">Přijďte <em className="text-rose">posedět</em></h2>
-          <p data-edit-text="reservation.note" data-edit-label="Rezervace poznámka" data-edit-multiline className="mt-4 font-display text-lg text-muted-foreground">{r.note}</p>
-          <div className="mt-3 flex justify-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            <span data-edit-num="reservation.outMax" data-edit-label="Max venku" className="cursor-default">venku max {OUT_MAX}</span>
-            <span>·</span>
-            <span data-edit-num="reservation.inMax" data-edit-label="Max vevnitř" className="cursor-default">vevnitř max {IN_MAX}</span>
-          </div>
-        </div>
-
-        <motion.form
-          onSubmit={submit}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="paper-card mt-12 rounded-lg p-8 md:p-12"
-        >
-          <div className="grid grid-cols-2 gap-3">
-            {(["venku", "vevnitr"] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSeating(s)}
-                className={`rounded-md border px-4 py-4 text-center font-display text-lg transition ${
-                  seating === s
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-cream/50 text-foreground hover:border-primary/50"
-                }`}
-              >
-                {s === "venku" ? `Zahrádka · max ${OUT_MAX}` : `Uvnitř · max ${IN_MAX}`}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Field label="Jméno"><input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="Pepina N." /></Field>
-            <Field label="Telefon"><input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="+420 ..." /></Field>
-            <Field label="Datum"><input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} /></Field>
-            <Field label="Čas"><input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={inputCls} /></Field>
-            <Field label={`Hosté (max ${cap})`}>
-              <div className="flex items-center gap-3">
-                <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="h-10 w-10 rounded-md border border-border bg-cream text-xl">−</button>
-                <input
-                  type="number" min={1} max={cap} value={guests}
-                  onChange={(e) => setGuests(Math.min(cap, Math.max(1, Number(e.target.value) || 1)))}
-                  className={`${inputCls} text-center`}
-                />
-                <button type="button" onClick={() => setGuests(Math.min(cap, guests + 1))} className="h-10 w-10 rounded-md border border-border bg-cream text-xl">+</button>
-              </div>
-            </Field>
-          </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent disabled:opacity-60"
-          >
-            {submitting ? "Odesílám…" : "Rezervovat"}
-          </button>
-        </motion.form>
-      </div>
-    </section>
-  );
-}
-
-const inputCls = "w-full rounded-md border border-border bg-cream/70 px-4 py-3 font-display text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1 block font-sans-ui text-xs uppercase tracking-[0.25em] text-muted-foreground">{label}</span>
-      {children}
-    </label>
-  );
-}
 
 function Footer() {
   const f = useSiteContent().footer;
@@ -451,7 +309,6 @@ function Index() {
 
   return (
     <main className="relative overflow-x-clip">
-      <Toaster position="top-center" richColors />
       <ScrollProgress />
       
       <Hero />
@@ -459,7 +316,6 @@ function Index() {
       <Founders />
       <Menu />
       <Gallery />
-      <Reservation />
       <Footer />
       {!editMode && <CookieBanner />}
       {editMode && <EditOverlay />}
