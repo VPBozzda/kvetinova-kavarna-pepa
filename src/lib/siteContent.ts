@@ -67,7 +67,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { name: "Aperol Spritz", price: "125" },
     ],
   },
-  gallery: [img2345.url, img2342.url, img2343.url, img2349.url, img2350.url],
+  gallery: [img2345.url, karlstejnStreet.url, karlstejnStreet.url, img2349.url, img2350.url],
   reservation: {
     outMax: 32,
     inMax: 10,
