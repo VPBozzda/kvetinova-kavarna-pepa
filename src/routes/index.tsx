@@ -88,18 +88,23 @@ function Hero() {
         className="relative z-10 flex h-full flex-col px-6"
       >
         <div className="pt-8 md:pt-10">
-          <h1 className="text-left leading-[0.95] drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
-            <span className="block italic text-cream text-2xl md:text-3xl">Květinová</span>
-            <span className="font-script -mt-1 block text-rose text-3xl md:text-4xl">Kavárna</span>
-            <span className="mt-1 block text-[10px] tracking-[0.45em] text-cream/90 md:text-xs">PE &amp; PA</span>
-          </h1>
-          <span data-edit-text="hero.kicker" data-edit-label="Kicker" className="mt-2 block font-sans-ui text-[10px] uppercase tracking-[0.4em] text-cream/80">{c.kicker}</span>
+          <span data-edit-text="hero.kicker" data-edit-label="Adresa / kicker" className="block font-sans-ui text-[10px] uppercase tracking-[0.45em] text-cream/85 md:text-xs">{c.kicker}</span>
+          <p className="mt-2 text-left leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
+            <span className="block italic text-cream text-lg md:text-xl">Květinová</span>
+            <span className="font-script -mt-1 block text-rose text-2xl md:text-3xl">Kavárna</span>
+            <span className="mt-1 block text-[9px] tracking-[0.45em] text-cream/80 md:text-[11px]">PE &amp; PA</span>
+          </p>
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <p data-edit-text="hero.quote" data-edit-label="Hero text" data-edit-multiline className="max-w-xl font-display text-xl italic text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] md:text-2xl">
+          <h1
+            data-edit-text="hero.quote"
+            data-edit-label="Hlavní nadpis"
+            data-edit-multiline
+            className="max-w-2xl font-display text-3xl italic leading-snug text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-5xl"
+          >
             {c.quote}
-          </p>
+          </h1>
           <a
             href="#rezervace"
             data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
