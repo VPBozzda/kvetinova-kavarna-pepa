@@ -82,25 +82,29 @@ function Hero() {
 
       <motion.div
         style={{ y: yFront, opacity }}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
+        className="relative z-10 flex h-full flex-col px-6"
       >
-        <span data-edit-text="hero.kicker" data-edit-label="Kicker" className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">{c.kicker}</span>
-        <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
-          <span className="block italic text-cream">Květinová</span>
-          <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">Kavárna</span>
-          <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">PE &amp; PA</span>
-        </h1>
-        <p data-edit-text="hero.quote" data-edit-label="Hero citát" data-edit-multiline className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
-          {c.quote}
-        </p>
-        <p data-edit-text="hero.signature" data-edit-label="Podpis" className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">{c.signature}</p>
-        <a
-          href="#rezervace"
-          data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
-          className="mt-8 inline-flex items-center gap-3 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur transition hover:bg-cream hover:text-ink"
-        >
-          {c.cta}
-        </a>
+        <div className="pt-8 md:pt-10">
+          <h1 className="text-left leading-[0.95] drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
+            <span className="block italic text-cream text-2xl md:text-3xl">Květinová</span>
+            <span className="font-script -mt-1 block text-rose text-3xl md:text-4xl">Kavárna</span>
+            <span className="mt-1 block text-[10px] tracking-[0.45em] text-cream/90 md:text-xs">PE &amp; PA</span>
+          </h1>
+          <span data-edit-text="hero.kicker" data-edit-label="Kicker" className="mt-2 block font-sans-ui text-[10px] uppercase tracking-[0.4em] text-cream/80">{c.kicker}</span>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
+          <p data-edit-text="hero.quote" data-edit-label="Hero text" data-edit-multiline className="max-w-xl font-display text-xl italic text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] md:text-2xl">
+            {c.quote}
+          </p>
+          <a
+            href="#rezervace"
+            data-edit-text="hero.cta" data-edit-label="CTA tlačítko"
+            className="mt-8 inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-ink/30 transition hover:bg-accent"
+          >
+            {c.cta}
+          </a>
+        </div>
       </motion.div>
 
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
