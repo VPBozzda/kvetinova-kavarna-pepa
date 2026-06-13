@@ -487,7 +487,7 @@ function Index() {
     <main className="relative overflow-x-clip">
       <Toaster position="top-center" richColors />
       <ScrollProgress />
-      <Petals />
+      
       <Hero />
       <Story />
       <Founders />
