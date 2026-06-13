@@ -6,6 +6,7 @@ import img2343 from "@/assets/IMG_2343.asset.json";
 import img2345 from "@/assets/IMG_2345.asset.json";
 import img2349 from "@/assets/IMG_2349.asset.json";
 import img2350 from "@/assets/IMG_2350.asset.json";
+import karlstejnStreet from "@/assets/karlstejn-street.jpeg.asset.json";
 import founders from "@/assets/pepa-pavla-dvere.jpg.asset.json";
 
 export type MenuItem = { name: string; price: string };
