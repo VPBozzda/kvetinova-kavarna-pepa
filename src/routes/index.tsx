@@ -454,7 +454,7 @@ function Footer() {
         </p>
         <p className="mt-2 font-sans-ui text-[11px] tracking-wide">
           <Link to="/ochrana-osobnich-udaju" className="text-muted-foreground underline decoration-rose/60 underline-offset-4 hover:text-rose">
-            Ochrana osobních údajů &amp; cookies
+            Ochrana osobních údajů
           </Link>
         </p>
       </div>
