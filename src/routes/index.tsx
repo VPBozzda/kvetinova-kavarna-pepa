@@ -270,7 +270,7 @@ function Gallery() {
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
 
   return (
-    <section ref={ref} className="relative" style={{ height: `${Math.max(100, 100 + (maxX / window.innerWidth) * 100)}vh` }}>
+    <section ref={ref} className="relative" style={{ height: `${100 + (typeof window !== "undefined" && window.innerWidth ? (maxX / window.innerWidth) * 100 : 0)}vh` }}>
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
         <div className="px-6 text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
