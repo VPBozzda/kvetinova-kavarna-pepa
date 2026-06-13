@@ -79,7 +79,7 @@ function Hero() {
           {c.quote}
         </p>
 
-        <p className="mt-10 font-sans-ui text-xl font-semibold uppercase tracking-[0.18em] text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-2xl">
+        <p className="mt-16 inline-flex items-center gap-2 rounded-full border border-cream/25 bg-ink/30 px-5 py-2.5 backdrop-blur-sm font-sans-ui text-sm font-medium uppercase tracking-[0.2em] text-cream/90 shadow-[0_4px_20px_rgba(0,0,0,0.2)] md:mt-20 md:px-6 md:py-3 md:text-base">
           S Sebou
         </p>
       </motion.div>
