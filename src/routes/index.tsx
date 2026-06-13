@@ -2,13 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Lenis from "lenis";
-import { toast, Toaster } from "sonner";
 
 import { useSiteContent, type MenuItem } from "@/lib/siteContent";
 import { EditOverlay } from "@/components/EditOverlay";
 import { CookieBanner } from "@/components/CookieBanner";
 import { Link } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
