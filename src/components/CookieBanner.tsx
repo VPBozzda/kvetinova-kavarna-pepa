@@ -26,15 +26,26 @@ export function CookieBanner() {
             Více informací
           </Link>
         </p>
-        <button
-          onClick={() => {
-            try { localStorage.setItem(KEY, "1"); } catch {}
-            setShow(false);
-          }}
-          className="shrink-0 rounded-md bg-primary px-5 py-2 font-sans-ui text-xs uppercase tracking-[0.25em] text-primary-foreground transition hover:bg-accent"
-        >
-          Rozumím
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            onClick={() => {
+              try { localStorage.setItem(KEY, "declined"); } catch {}
+              setShow(false);
+            }}
+            className="rounded-md px-3 py-2 font-sans-ui text-xs uppercase tracking-[0.25em] text-muted-foreground transition hover:text-foreground"
+          >
+            Odmítnout
+          </button>
+          <button
+            onClick={() => {
+              try { localStorage.setItem(KEY, "1"); } catch {}
+              setShow(false);
+            }}
+            className="rounded-md bg-primary px-5 py-2 font-sans-ui text-xs uppercase tracking-[0.25em] text-primary-foreground transition hover:bg-accent"
+          >
+            Rozumím
+          </button>
+        </div>
       </div>
     </div>
   );
