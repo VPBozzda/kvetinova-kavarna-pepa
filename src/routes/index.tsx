@@ -30,34 +30,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Petals() {
-  const petals = Array.from({ length: 18 });
-  return (
-    <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden" aria-hidden>
-      {petals.map((_, i) => {
-        const left = (i * 53) % 100;
-        const delay = (i * 0.7) % 12;
-        const dx = (i % 2 === 0 ? 1 : -1) * (20 + (i * 13) % 80);
-        const size = 8 + (i % 5) * 3;
-        return (
-          <span
-            key={i}
-            className="animate-petal absolute -top-10 block"
-            style={{
-              left: `${left}%`,
-              animationDelay: `${delay}s`,
-              ["--dx" as string]: `${dx}px`,
-            }}
-          >
-            <svg width={size} height={size} viewBox="0 0 20 20">
-              <ellipse cx="10" cy="10" rx="5" ry="9" fill="oklch(0.78 0.13 15 / 0.7)" />
-            </svg>
-          </span>
-        );
-      })}
-    </div>
-  );
-}
 
 function Hero() {
   const c = useSiteContent().hero;
