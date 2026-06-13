@@ -79,7 +79,7 @@ function Hero() {
           {c.quote}
         </p>
 
-        <p className="mt-10 font-script text-5xl text-rose drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] md:text-6xl">
+        <p className="mt-10 font-sans-ui text-xl font-semibold uppercase tracking-[0.18em] text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-2xl">
           S Sebou
         </p>
       </motion.div>
