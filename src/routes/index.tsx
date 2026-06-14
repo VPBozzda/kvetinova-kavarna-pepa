@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import Lenis from "lenis";
 import { Toaster } from "sonner";
 
@@ -181,12 +181,72 @@ function Story() {
   );
 }
 
-function OpeningHours() {
+function ScrollTypewriter({
+  text,
+  className,
+  progress,
+  start,
+  end,
+}: {
+  text: string;
+  className?: string;
+  progress: MotionValue<number>;
+  start: number;
+  end: number;
+}) {
+  const chars = Array.from(text);
+  const reveal = useTransform(progress, [start, end], [0, chars.length], { clamp: true });
+  const cursorOpacity = useTransform(reveal, (v) => (v >= chars.length ? 0 : 1));
+
   return (
-    <section className="relative py-20 md:py-28">
+    <span className={className} aria-label={text}>
+      {chars.map((c, i) => (
+        <CharSpan key={i} index={i} reveal={reveal} char={c} />
+      ))}
+      <motion.span
+        style={{ opacity: cursorOpacity }}
+        className="ml-0.5 inline-block animate-pulse text-rose"
+        aria-hidden
+      >
+        |
+      </motion.span>
+    </span>
+  );
+}
+
+function CharSpan({
+  index,
+  reveal,
+  char,
+}: {
+  index: number;
+  reveal: MotionValue<number>;
+  char: string;
+}) {
+  const opacity = useTransform(reveal, (v) => (v > index ? 1 : 0));
+  return (
+    <motion.span style={{ opacity }} aria-hidden>
+      {char === " " ? "\u00A0" : char}
+    </motion.span>
+  );
+}
+
+function OpeningHours() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.4"] });
+
+  return (
+    <section ref={ref} className="relative py-20 md:py-28">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Návštěva</span>
-        <h2 className="mt-3 text-5xl md:text-6xl">Kdy jsme <em className="text-rose">otevřeni</em></h2>
+        <h2 className="mt-3 text-5xl md:text-6xl">
+          <ScrollTypewriter
+            text="Kdy jsme otevřeni"
+            progress={scrollYProgress}
+            start={0.0}
+            end={0.45}
+          />
+        </h2>
 
         <div className="mt-10 inline-block rounded-lg border border-border bg-cream/70 px-10 py-8 shadow-sm backdrop-blur-sm">
           <p className="font-display text-2xl leading-relaxed text-foreground md:text-3xl">
@@ -196,7 +256,12 @@ function OpeningHours() {
           </p>
           <div className="mx-auto mt-4 h-px w-16 bg-border" />
           <p className="mt-4 font-sans-ui text-lg tracking-wider text-foreground md:text-xl">
-            9:30 <span className="text-muted-foreground">až</span> 18:00
+            <ScrollTypewriter
+              text="9:30 až 18:00"
+              progress={scrollYProgress}
+              start={0.5}
+              end={0.95}
+            />
           </p>
         </div>
 
