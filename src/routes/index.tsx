@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Lenis from "lenis";
 import { Toaster } from "sonner";
@@ -13,11 +13,8 @@ import img2350 from "@/assets/IMG_2350.asset.json";
 import img2351 from "@/assets/IMG_2351.asset.json";
 import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
+import interior from "@/assets/interior-table.asset.json";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -91,6 +88,16 @@ function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
+  const fullText = "Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn. Vše děláme ručně, pomalu a od srdce.";
+  const typed = useTransform(scrollYProgress, [0, 0.5], [0, fullText.length]);
+  const [shown, setShown] = useState("");
+  useEffect(() => {
+    return typed.on("change", (v) => {
+      const n = Math.max(0, Math.min(fullText.length, Math.round(v)));
+      setShown(fullText.slice(0, n));
+    });
+  }, [typed]);
+
   return (
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
@@ -121,9 +128,9 @@ function Hero() {
           </span>
         </h1>
 
-        <p className="mt-8 max-w-2xl font-display text-xl leading-relaxed text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
-          Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn.
-          Vše děláme ručně, pomalu a od srdce.
+        <p className="mt-8 min-h-[6rem] max-w-2xl font-display text-xl leading-relaxed text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:min-h-[7rem] md:text-2xl">
+          {shown}
+          <span className="ml-0.5 inline-block w-[2px] -translate-y-1 animate-pulse bg-rose align-middle" style={{ height: "1.1em" }} />
         </p>
 
         <p className="mt-8 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream/90">
@@ -290,50 +297,62 @@ function Menu() {
   );
 }
 
+function GalleryColumn({
+  items,
+  direction,
+  progress,
+}: {
+  items: { src: string; alt: string }[];
+  direction: 1 | -1;
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+}) {
+  const y = useTransform(progress, [0, 1], direction === 1 ? ["0%", "-50%"] : ["-50%", "0%"]);
+  return (
+    <div className="relative h-full flex-1 overflow-hidden">
+      <motion.div style={{ y }} className="flex flex-col gap-6 md:gap-8">
+        {[...items, ...items].map((it, i) => (
+          <figure
+            key={i}
+            className="paper-card relative overflow-hidden rounded-md p-2"
+            style={{ height: "clamp(280px, 42vh, 460px)" }}
+          >
+            <img src={it.src} alt={it.alt} loading="lazy" className="h-full w-full rounded-sm object-cover" />
+            <figcaption className="absolute bottom-3 left-0 right-0 text-center font-script text-lg text-rose drop-shadow md:text-xl">
+              {it.alt}
+            </figcaption>
+          </figure>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
 function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    if (!section || !track) return;
-
-    const getScrollWidth = () => Math.max(0, track.scrollWidth - window.innerWidth);
-
-    const tween = gsap.to(track, {
-      x: () => -getScrollWidth(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: () => `+=${getScrollWidth()}`,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-  }, []);
-
-  const items = [
-    { src: glassware.url, alt: "Staré sklo a cukřenka" },
-    { src: img2345.url, alt: "Zahrádka kavárny" },
-    { src: img2349.url, alt: "Interiér kavárny" },
-    { src: img2350.url, alt: "Květiny" },
+  const colA = [
+    { src: glassware.url, alt: "Staré sklo" },
+    { src: img2349.url, alt: "Interiér" },
     { src: img2342.url, alt: "Tabule s kávou" },
-    { src: img2343.url, alt: "Tabule s dezerty" },
-    { src: img2348.url, alt: "Karlštejn ulice" },
     { src: img2351.url, alt: "Květinový věnec" },
+  ];
+  const colB = [
+    { src: interior.url, alt: "U stolu" },
+    { src: img2350.url, alt: "Květiny" },
+    { src: img2345.url, alt: "Zahrádka" },
+    { src: img2343.url, alt: "Tabule s dezerty" },
+  ];
+  const colC = [
+    { src: img2348.url, alt: "Karlštejn ulice" },
+    { src: img2350.url, alt: "Květinová zátiší" },
+    { src: img2349.url, alt: "Babiččin koutek" },
+    { src: img2342.url, alt: "Detail menu" },
   ];
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-background">
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 pt-10 text-center md:pt-14">
+    <section ref={sectionRef} className="relative overflow-hidden bg-background py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-6 text-center">
         <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
         <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         <p className="mt-3 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -341,28 +360,14 @@ function Gallery() {
         </p>
       </div>
 
-      <div ref={trackRef} className="flex h-full items-center gap-6 px-[8vw] pt-20 md:gap-8 md:px-[10vw]">
-        {items.map((it, i) => (
-          <figure
-            key={i}
-            className="paper-card group relative shrink-0 overflow-hidden rounded-md p-2"
-            style={{
-              width: "clamp(260px, 35vw, 420px)",
-              height: "clamp(300px, 55vh, 480px)",
-              transform: `rotate(${i % 2 === 0 ? -1.2 : 1.2}deg)`,
-            }}
-          >
-            <img
-              src={it.src}
-              alt={it.alt}
-              loading="lazy"
-              className="h-full w-full rounded-sm object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <figcaption className="absolute bottom-3 left-0 right-0 text-center font-script text-lg text-rose drop-shadow md:text-xl">
-              {it.alt}
-            </figcaption>
-          </figure>
-        ))}
+      <div className="relative mx-auto mt-12 grid h-[80vh] max-w-7xl grid-cols-2 gap-6 overflow-hidden px-6 md:grid-cols-3 md:gap-8">
+        <GalleryColumn items={colA} direction={1} progress={scrollYProgress} />
+        <GalleryColumn items={colB} direction={-1} progress={scrollYProgress} />
+        <div className="hidden md:block">
+          <GalleryColumn items={colC} direction={1} progress={scrollYProgress} />
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background to-transparent" />
       </div>
     </section>
   );
