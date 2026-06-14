@@ -236,7 +236,7 @@ function OpeningHours() {
             text="Kdy jsme otevřeni"
             progress={scrollYProgress}
             start={0.0}
-            end={0.45}
+            end={0.36}
           />
         </h2>
 
