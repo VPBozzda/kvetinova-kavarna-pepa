@@ -264,8 +264,36 @@ function Menu() {
 }
 
 function Gallery() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const getScrollWidth = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+    const tween = gsap.to(track, {
+      x: () => -getScrollWidth(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: () => `+=${getScrollWidth()}`,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
   const items = [
-    { src: owners.url, alt: "Pepina & Pavla u dveří kavárny" },
     { src: glassware.url, alt: "Staré sklo a cukřenka" },
     { src: img2345.url, alt: "Zahrádka kavárny" },
     { src: img2349.url, alt: "Interiér kavárny" },
@@ -275,43 +303,39 @@ function Gallery() {
     { src: img2348.url, alt: "Karlštejn ulice" },
     { src: img2351.url, alt: "Květinový věnec" },
   ];
+
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-6 text-center">
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-background">
+      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 pt-10 text-center md:pt-14">
         <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
         <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         <p className="mt-3 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          ← táhněte / scroll →
+          scroll ↓
         </p>
       </div>
 
-      <div className="mt-12 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth [scrollbar-width:thin]">
-        <div className="flex gap-6 px-[8vw]">
-          {items.map((it, i) => (
-            <motion.figure
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: (i % 5) * 0.05 }}
-              className="paper-card group relative shrink-0 snap-center overflow-hidden rounded-md p-2"
-              style={{
-                width: "clamp(260px, 70vw, 460px)",
-                transform: `rotate(${i % 2 === 0 ? -1.2 : 1.2}deg)`,
-              }}
-            >
-              <img
-                src={it.src}
-                alt={it.alt}
-                loading="lazy"
-                className="h-[60vh] max-h-[520px] w-full rounded-sm object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <figcaption className="mt-2 text-center font-script text-xl text-rose">
-                {it.alt}
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
+      <div ref={trackRef} className="flex h-full items-center gap-6 px-[8vw] pt-20 md:gap-8 md:px-[10vw]">
+        {items.map((it, i) => (
+          <figure
+            key={i}
+            className="paper-card group relative shrink-0 overflow-hidden rounded-md p-2"
+            style={{
+              width: "clamp(260px, 35vw, 420px)",
+              height: "clamp(300px, 55vh, 480px)",
+              transform: `rotate(${i % 2 === 0 ? -1.2 : 1.2}deg)`,
+            }}
+          >
+            <img
+              src={it.src}
+              alt={it.alt}
+              loading="lazy"
+              className="h-full w-full rounded-sm object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <figcaption className="absolute bottom-3 left-0 right-0 text-center font-script text-lg text-rose drop-shadow md:text-xl">
+              {it.alt}
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );
