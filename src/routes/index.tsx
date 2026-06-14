@@ -92,6 +92,19 @@ function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
+  const fullText = "Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn. Vše děláme ručně, pomalu a od srdce.";
+  const typed = useTransform(scrollYProgress, [0, 0.5], [0, fullText.length]);
+  const [shown, setShown] = (function useStr() {
+    const [s, setS] = require("react").useState("");
+    return [s, setS];
+  })();
+  useEffect(() => {
+    return typed.on("change", (v) => {
+      const n = Math.max(0, Math.min(fullText.length, Math.round(v)));
+      setShown(fullText.slice(0, n));
+    });
+  }, [typed]);
+
   return (
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
