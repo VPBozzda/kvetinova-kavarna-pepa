@@ -94,10 +94,7 @@ function Hero() {
 
   const fullText = "Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn. Vše děláme ručně, pomalu a od srdce.";
   const typed = useTransform(scrollYProgress, [0, 0.5], [0, fullText.length]);
-  const [shown, setShown] = (function useStr() {
-    const [s, setS] = require("react").useState("");
-    return [s, setS];
-  })();
+  const [shown, setShown] = useState("");
   useEffect(() => {
     return typed.on("change", (v) => {
       const n = Math.max(0, Math.min(fullText.length, Math.round(v)));
