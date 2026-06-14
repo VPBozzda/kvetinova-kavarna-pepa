@@ -2,11 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Lenis from "lenis";
+import { toast, Toaster } from "sonner";
 
-import { useSiteContent, type MenuItem } from "@/lib/siteContent";
-import { EditOverlay } from "@/components/EditOverlay";
-import { CookieBanner } from "@/components/CookieBanner";
-import { Link } from "@tanstack/react-router";
+import img2342 from "@/assets/IMG_2342.asset.json";
+import img2343 from "@/assets/IMG_2343.asset.json";
+import img2344 from "@/assets/IMG_2344.asset.json";
+import img2345 from "@/assets/IMG_2345.asset.json";
+import img2348 from "@/assets/IMG_2348.asset.json";
+import img2349 from "@/assets/IMG_2349.asset.json";
+import img2350 from "@/assets/IMG_2350.asset.json";
+import img2351 from "@/assets/IMG_2351.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,63 +33,107 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const coffee = [
+  ["Espresso", 55], ["Lungo", 60], ["Doppio", 75], ["Macchiato", 65],
+  ["Cappuccino", 65], ["Latte", 75], ["Latte Macchiato", 75],
+  ["Flat White", 85], ["Espresso Tonic", 70],
+];
+const desserts = [
+  ["Mošedaján", 79], ["Rebarborovo-jahodový koláč", 69], ["Švestkový koláč s mákem", 69],
+  ["Bábovka", 65], ["Kávová bábovka", 65],
+];
+const drinks = [
+  ["Limonáda (borůvka, máta-citron, bezinková)", 45],
+  ["Plzeň 0,3", 60], ["Víno 1dcl / 2dcl", "45 / 65"],
+  ["Prosecco", 35], ["Aperol Spritz", 125],
+];
+
+function Petals() {
+  const petals = Array.from({ length: 18 });
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden" aria-hidden>
+      {petals.map((_, i) => {
+        const left = (i * 53) % 100;
+        const delay = (i * 0.7) % 12;
+        const dx = (i % 2 === 0 ? 1 : -1) * (20 + (i * 13) % 80);
+        const size = 8 + (i % 5) * 3;
+        return (
+          <span
+            key={i}
+            className="animate-petal absolute -top-10 block"
+            style={{
+              left: `${left}%`,
+              animationDelay: `${delay}s`,
+              ["--dx" as string]: `${dx}px`,
+            }}
+          >
+            <svg width={size} height={size} viewBox="0 0 20 20">
+              <ellipse cx="10" cy="10" rx="5" ry="9" fill="oklch(0.78 0.13 15 / 0.7)" />
+            </svg>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
 
 function Hero() {
-  const c = useSiteContent().hero;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yBack = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const yMid = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
   const yFront = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
     <section ref={ref} className="relative h-[100svh] overflow-hidden">
+      {/* single background image */}
       <motion.div style={{ y: yBack, scale }} className="absolute inset-0">
         <img
-          data-edit-image="hero.bgImage"
-          data-edit-label="Hero pozadí"
-          src={c.bgImage}
+          src={img2345.url}
           alt="Květinová Kavárna Pe&Pa pod Karlštejnem"
           className="h-full w-full object-cover"
           style={{ filter: "brightness(0.62) saturate(0.85) contrast(1.05) sepia(0.18)" }}
         />
+
+        {/* readability overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/70" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.2_0.02_30/0.15)_0%,_oklch(0.15_0.02_30/0.55)_85%)]" />
       </motion.div>
 
+      {/* foreground text */}
       <motion.div
         style={{ y: yFront, opacity }}
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
-        <span
-          data-edit-text="hero.kicker"
-          data-edit-label="Adresa / kicker"
-          className="block font-sans-ui text-[13px] uppercase tracking-[0.45em] text-cream/85 md:text-base"
-        >
-          {c.kicker}
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">
+          Karlštejn · č.p. 16
         </span>
-        <p className="mt-4 leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]">
-          <span className="block italic text-cream text-3xl md:text-5xl">Květinová</span>
-          <span className="font-script -mt-1 block text-rose text-5xl md:text-7xl">Kavárna</span>
-          <span className="mt-2 block text-[11px] tracking-[0.45em] text-cream/80 md:text-sm">PE &amp; PA</span>
+        <h1 className="mt-4 text-[clamp(3rem,11vw,8rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
+          <span className="block italic text-cream">Květinová</span>
+          <span className="font-script -mt-2 block text-[clamp(4rem,14vw,10rem)] text-rose">
+            Kavárna
+          </span>
+          <span className="mt-2 block text-2xl tracking-[0.5em] text-cream/95 md:text-3xl">
+            PE &amp; PA
+          </span>
+        </h1>
+        <p className="mt-6 max-w-xl font-display text-xl italic text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
+          „Děláme to celé od srdce — protože to říkáme.“
         </p>
-
-        <p
-          data-edit-text="hero.quote"
-          data-edit-label="Hlavní text"
-          data-edit-multiline
-          className="mt-10 max-w-xl font-display text-lg leading-relaxed text-cream/95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] md:text-2xl"
+        <p className="mt-2 max-w-md font-sans-ui text-xs uppercase tracking-[0.35em] text-cream/80">
+          Pepina &amp; Pavla
+        </p>
+        <a
+          href="#rezervace"
+          className="mt-8 inline-flex items-center gap-3 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur transition hover:bg-cream hover:text-ink"
         >
-          {c.quote}
-        </p>
-
-        <p className="mt-16 max-w-md rounded-md border border-cream/25 bg-ink/40 px-6 py-4 backdrop-blur-sm font-sans-ui text-sm font-medium text-cream/95 shadow-[0_4px_20px_rgba(0,0,0,0.25)] md:mt-20 md:text-base">
-          Všechny naše dobroty vám rádi zabalíme i s sebou na hrad.
-        </p>
+          Rezervovat stůl
+        </a>
       </motion.div>
 
-
+      {/* sway branches */}
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
       <div className="pointer-events-none absolute right-6 top-0 h-52 w-1 origin-top animate-sway bg-gradient-to-b from-moss/30 to-transparent" style={{ animationDelay: "1.5s" }} />
 
@@ -95,8 +144,8 @@ function Hero() {
   );
 }
 
+
 function Story() {
-  const s = useSiteContent().story;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [80, -80]);
@@ -107,15 +156,13 @@ function Story() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 md:grid-cols-2">
         <div className="relative h-[420px] md:h-[560px]">
           <motion.img
-            data-edit-image="story.image1" data-edit-label="Story obrázek 1"
-            src={s.image1}
+            src={img2349.url}
             alt="Interiér kavárny"
             style={{ y: y1, rotate: rot }}
             className="paper-card absolute left-0 top-0 h-[72%] w-[78%] rounded-md object-cover p-2"
           />
           <motion.img
-            data-edit-image="story.image2" data-edit-label="Story obrázek 2"
-            src={s.image2}
+            src={img2350.url}
             alt="Květiny na stole"
             style={{ y: y2 }}
             className="paper-card absolute bottom-0 right-0 h-[58%] w-[62%] rounded-md object-cover p-2"
@@ -123,50 +170,22 @@ function Story() {
         </div>
         <div>
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Naše story</span>
-          <h2 data-edit-text="story.title" data-edit-label="Story nadpis" className="mt-3 text-5xl md:text-6xl">{s.title}</h2>
-          <p data-edit-text="story.body" data-edit-label="Story text" data-edit-multiline className="mt-6 font-display text-xl leading-relaxed text-muted-foreground whitespace-pre-line">{s.body}</p>
-          <p data-edit-text="story.signoff" data-edit-label="Podpis story" className="mt-4 font-script text-3xl text-rose">{s.signoff}</p>
+          <h2 className="mt-3 text-5xl md:text-6xl">
+            Dvě dámy, <em className="text-rose">jeden</em> sen.
+          </h2>
+          <p className="mt-6 font-display text-xl leading-relaxed text-muted-foreground">
+            Pepina a Pavla otevřely Květinovou Kavárnu, aby vrátily kousek babiččiných časů
+            zpátky pod karlštejnský kopec. Květované tapety, sametové polštáře, krajkové ubrousky
+            a v každém šálku něco, co voní jako neděle.
+          </p>
+          <p className="mt-4 font-script text-3xl text-rose">— S láskou, Pe &amp; Pa</p>
         </div>
       </div>
     </section>
   );
 }
 
-function Founders() {
-  const f = useSiteContent().founders;
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1.05, 0.98]);
-  return (
-    <section ref={ref} className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="text-center">
-          <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Zakladatelky</span>
-          <h2 className="mt-3 text-5xl md:text-6xl">Pe <em className="text-rose">&amp;</em> Pa</h2>
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="paper-card relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-md p-3"
-        >
-          <motion.img
-            data-edit-image="founders.image" data-edit-label="Zakladatelky foto"
-            style={{ y, scale }}
-            src={f.image}
-            alt={f.caption}
-            className="h-[60vh] w-full rounded-sm object-cover"
-          />
-          <p data-edit-text="founders.caption" data-edit-label="Popisek zakladatelek" className="mt-4 text-center font-script text-3xl text-rose">{f.caption}</p>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function MenuBoard({ title, items, listPath }: { title: string; items: MenuItem[]; listPath: string }) {
+function MenuBoard({ title, items }: { title: string; items: [string, string | number][] }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: -1 }}
@@ -174,17 +193,15 @@ function MenuBoard({ title, items, listPath }: { title: string; items: MenuItem[
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="chalkboard p-8 md:p-10"
-      data-edit-list={listPath}
-      data-edit-label={`Menu · ${title}`}
     >
       <h3 className="text-center font-script text-5xl text-chalk">{title}</h3>
       <div className="mx-auto mt-6 h-px w-24 bg-chalk/40" />
       <ul className="mt-6 space-y-3">
-        {items.map((it, i) => (
-          <li key={i} className="flex items-baseline gap-3 font-display text-lg text-chalk">
-            <span className="whitespace-nowrap">{it.name}</span>
+        {items.map(([name, price]) => (
+          <li key={name} className="flex items-baseline gap-3 font-display text-lg text-chalk">
+            <span className="whitespace-nowrap">{name}</span>
             <span className="flex-1 translate-y-[-4px] border-b border-dashed border-chalk/30" />
-            <span className="tabular-nums">{it.price},-</span>
+            <span className="tabular-nums">{price},-</span>
           </li>
         ))}
       </ul>
@@ -193,7 +210,6 @@ function MenuBoard({ title, items, listPath }: { title: string; items: MenuItem[
 }
 
 function Menu() {
-  const m = useSiteContent().menu;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
@@ -205,9 +221,9 @@ function Menu() {
           <h2 className="mt-3 text-5xl md:text-6xl">Z naší <em className="text-rose">tabule</em></h2>
         </motion.div>
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <MenuBoard title="Káva" items={m.coffee} listPath="menu.coffee" />
-          <MenuBoard title="Dezerty" items={m.desserts} listPath="menu.desserts" />
-          <MenuBoard title="Nápoje" items={m.drinks} listPath="menu.drinks" />
+          <MenuBoard title="Káva" items={coffee as [string, number][]} />
+          <MenuBoard title="Dezerty" items={desserts as [string, number][]} />
+          <MenuBoard title="Nápoje" items={drinks as [string, string | number][]} />
         </div>
         <p className="mt-8 text-center font-script text-2xl text-rose">objednávky uvnitř · order at bar</p>
       </div>
@@ -216,71 +232,154 @@ function Menu() {
 }
 
 function Gallery() {
-  const g = useSiteContent().gallery;
-  const ref = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const [maxX, setMaxX] = useState(0);
-
-  useEffect(() => {
-    const calc = () => {
-      const track = trackRef.current;
-      if (!track) return;
-      setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
-    };
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, [g.length]);
-
-  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
-
+  const items = [
+    { src: img2345.url, alt: "Zahrádka", span: "md:col-span-2 md:row-span-2", h: "h-[420px]" },
+    { src: img2342.url, alt: "Tabule káva", span: "", h: "h-[260px]" },
+    { src: img2343.url, alt: "Tabule dezerty", span: "", h: "h-[260px]" },
+    { src: img2349.url, alt: "Interiér", span: "", h: "h-[260px]" },
+    { src: img2350.url, alt: "Květiny", span: "", h: "h-[260px]" },
+  ];
   return (
-    <section ref={ref} className="relative" style={{ height: `${100 + (typeof window !== "undefined" && window.innerWidth ? (maxX / window.innerWidth) * 100 : 0)}vh` }}>
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <div className="px-6 text-center">
+    <section className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center">
           <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
           <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         </div>
-        <motion.div ref={trackRef} style={{ x }} className="mt-10 flex gap-6 px-[10vw] will-change-transform">
-          {g.map((src, i) => (
-            <div
+        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4 md:auto-rows-[200px]">
+          {items.map((it, i) => (
+            <motion.div
               key={i}
-              className="paper-card shrink-0 overflow-hidden rounded-md p-2"
-              style={{ width: "min(70vw, 520px)" }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, delay: i * 0.08 }}
+              className={`paper-card overflow-hidden rounded-md p-2 ${it.span}`}
             >
               <img
-                data-edit-image={`gallery.${i}`} data-edit-label={`Galerie ${i + 1}`}
-                src={src}
-                alt={`Atmosféra ${i + 1}`}
-                className="h-[60vh] w-full rounded-sm object-cover"
+                src={it.src}
+                alt={it.alt}
+                className={`h-full w-full ${it.h} rounded-sm object-cover transition-transform duration-700 hover:scale-105`}
               />
-            </div>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
 
+function Reservation() {
+  const OUT_MAX = 32, IN_MAX = 10;
+  const [seating, setSeating] = useState<"venku" | "vevnitr">("venku");
+  const [guests, setGuests] = useState(2);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+
+  const cap = seating === "venku" ? OUT_MAX : IN_MAX;
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name || !phone || !date || !time) {
+      toast.error("Vyplňte prosím všechna pole.");
+      return;
+    }
+    if (guests > cap) {
+      toast.error(`Maximum pro ${seating} je ${cap} hostů.`);
+      return;
+    }
+    toast.success(`Děkujeme, ${name}! Rezervace pro ${guests} ${seating === "venku" ? "venku" : "vevnitř"} přijata.`, {
+      description: `${date} v ${time} · ozveme se na ${phone}.`,
+    });
+    setName(""); setPhone(""); setDate(""); setTime(""); setGuests(2);
+  }
+
+  return (
+    <section id="rezervace" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-3xl px-6">
+        <div className="text-center">
+          <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Rezervace</span>
+          <h2 className="mt-3 text-5xl md:text-6xl">Přijďte <em className="text-rose">posedět</em></h2>
+          <p className="mt-4 font-display text-lg text-muted-foreground">
+            Venku až <strong className="text-primary">32</strong> míst, uvnitř pro intimní chvíle <strong className="text-primary">10</strong> míst.
+          </p>
+        </div>
+
+        <motion.form
+          onSubmit={submit}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="paper-card mt-12 rounded-lg p-8 md:p-12"
+        >
+          <div className="grid grid-cols-2 gap-3">
+            {(["venku", "vevnitr"] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setSeating(s)}
+                className={`rounded-md border px-4 py-4 text-center font-display text-lg transition ${
+                  seating === s
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-cream/50 text-foreground hover:border-primary/50"
+                }`}
+              >
+                {s === "venku" ? "Zahrádka · max 32" : "Uvnitř · max 10"}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Field label="Jméno"><input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="Pepina N." /></Field>
+            <Field label="Telefon"><input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="+420 ..." /></Field>
+            <Field label="Datum"><input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} /></Field>
+            <Field label="Čas"><input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={inputCls} /></Field>
+            <Field label={`Hosté (max ${cap})`}>
+              <div className="flex items-center gap-3">
+                <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="h-10 w-10 rounded-md border border-border bg-cream text-xl">−</button>
+                <input
+                  type="number" min={1} max={cap} value={guests}
+                  onChange={(e) => setGuests(Math.min(cap, Math.max(1, Number(e.target.value) || 1)))}
+                  className={`${inputCls} text-center`}
+                />
+                <button type="button" onClick={() => setGuests(Math.min(cap, guests + 1))} className="h-10 w-10 rounded-md border border-border bg-cream text-xl">+</button>
+              </div>
+            </Field>
+          </div>
+
+          <button
+            type="submit"
+            className="mt-8 w-full rounded-md bg-primary py-4 font-sans-ui text-sm uppercase tracking-[0.3em] text-primary-foreground transition hover:bg-accent"
+          >
+            Rezervovat
+          </button>
+        </motion.form>
+      </div>
+    </section>
+  );
+}
+
+const inputCls = "w-full rounded-md border border-border bg-cream/70 px-4 py-3 font-display text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1 block font-sans-ui text-xs uppercase tracking-[0.25em] text-muted-foreground">{label}</span>
+      {children}
+    </label>
+  );
+}
 
 function Footer() {
-  const f = useSiteContent().footer;
   return (
     <footer className="border-t border-border bg-cream/60 py-12">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <p className="font-script text-4xl text-rose">Pe &amp; Pa</p>
-        <p data-edit-text="footer.address" data-edit-label="Adresa" className="mt-2 font-display text-lg text-muted-foreground">{f.address}</p>
-        <p data-edit-text="footer.tagline" data-edit-label="Tagline" className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">{f.tagline}</p>
-        <div className="mx-auto mt-6 h-px w-16 bg-border" />
-        <p className="mt-4 font-sans-ui text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-          IČ: 24648744 · zapsán v živnostenském rejstříku
-        </p>
-        <p className="mt-2 font-sans-ui text-[11px] tracking-wide">
-          <Link to="/ochrana-osobnich-udaju" className="text-muted-foreground underline decoration-rose/60 underline-offset-4 hover:text-rose">
-            Ochrana osobních údajů
-          </Link>
-        </p>
+        <p className="mt-2 font-display text-lg text-muted-foreground">Karlštejn 16 · pod hradem · Česká republika</p>
+        <p className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">otevřeno denně · order at bar · objednávky uvnitř</p>
       </div>
     </footer>
   );
@@ -293,10 +392,7 @@ function ScrollProgress() {
 }
 
 function Index() {
-  const editMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("edit") === "1";
-
   useEffect(() => {
-    if (editMode) return; // disable Lenis in editor for predictable clicks
     const lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -305,20 +401,19 @@ function Index() {
     function raf(time: number) { lenis.raf(time); requestAnimationFrame(raf); }
     const id = requestAnimationFrame(raf);
     return () => { cancelAnimationFrame(id); lenis.destroy(); };
-  }, [editMode]);
+  }, []);
 
   return (
     <main className="relative overflow-x-clip">
+      <Toaster position="top-center" richColors />
       <ScrollProgress />
-      
+      <Petals />
       <Hero />
       <Story />
-      <Founders />
       <Menu />
       <Gallery />
+      <Reservation />
       <Footer />
-      {!editMode && <CookieBanner />}
-      {editMode && <EditOverlay />}
     </main>
   );
 }

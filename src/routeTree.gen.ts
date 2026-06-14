@@ -9,27 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ZasadyOchranyOsobnichUdajuRouteImport } from './routes/zasady-ochrany-osobnich-udaju'
-import { Route as PodminkyUzitiRouteImport } from './routes/podminky-uziti'
-import { Route as OchranaOsobnichUdajuRouteImport } from './routes/ochrana-osobnich-udaju'
 import { Route as IndexRouteImport } from './routes/index'
 
-const ZasadyOchranyOsobnichUdajuRoute =
-  ZasadyOchranyOsobnichUdajuRouteImport.update({
-    id: '/zasady-ochrany-osobnich-udaju',
-    path: '/zasady-ochrany-osobnich-udaju',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PodminkyUzitiRoute = PodminkyUzitiRouteImport.update({
-  id: '/podminky-uziti',
-  path: '/podminky-uziti',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OchranaOsobnichUdajuRoute = OchranaOsobnichUdajuRouteImport.update({
-  id: '/ochrana-osobnich-udaju',
-  path: '/ochrana-osobnich-udaju',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -38,74 +19,28 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
-  '/podminky-uziti': typeof PodminkyUzitiRoute
-  '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
-  '/podminky-uziti': typeof PodminkyUzitiRoute
-  '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/ochrana-osobnich-udaju': typeof OchranaOsobnichUdajuRoute
-  '/podminky-uziti': typeof PodminkyUzitiRoute
-  '/zasady-ochrany-osobnich-udaju': typeof ZasadyOchranyOsobnichUdajuRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/ochrana-osobnich-udaju'
-    | '/podminky-uziti'
-    | '/zasady-ochrany-osobnich-udaju'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/ochrana-osobnich-udaju'
-    | '/podminky-uziti'
-    | '/zasady-ochrany-osobnich-udaju'
-  id:
-    | '__root__'
-    | '/'
-    | '/ochrana-osobnich-udaju'
-    | '/podminky-uziti'
-    | '/zasady-ochrany-osobnich-udaju'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  OchranaOsobnichUdajuRoute: typeof OchranaOsobnichUdajuRoute
-  PodminkyUzitiRoute: typeof PodminkyUzitiRoute
-  ZasadyOchranyOsobnichUdajuRoute: typeof ZasadyOchranyOsobnichUdajuRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/zasady-ochrany-osobnich-udaju': {
-      id: '/zasady-ochrany-osobnich-udaju'
-      path: '/zasady-ochrany-osobnich-udaju'
-      fullPath: '/zasady-ochrany-osobnich-udaju'
-      preLoaderRoute: typeof ZasadyOchranyOsobnichUdajuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/podminky-uziti': {
-      id: '/podminky-uziti'
-      path: '/podminky-uziti'
-      fullPath: '/podminky-uziti'
-      preLoaderRoute: typeof PodminkyUzitiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ochrana-osobnich-udaju': {
-      id: '/ochrana-osobnich-udaju'
-      path: '/ochrana-osobnich-udaju'
-      fullPath: '/ochrana-osobnich-udaju'
-      preLoaderRoute: typeof OchranaOsobnichUdajuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -118,9 +53,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  OchranaOsobnichUdajuRoute: OchranaOsobnichUdajuRoute,
-  PodminkyUzitiRoute: PodminkyUzitiRoute,
-  ZasadyOchranyOsobnichUdajuRoute: ZasadyOchranyOsobnichUdajuRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

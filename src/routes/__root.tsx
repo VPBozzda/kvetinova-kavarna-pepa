@@ -77,15 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Květinová Kavárna Pe&Pa — Karlštejn 16" },
-      { name: "description", content: "Romantická květinová kavárna pod Karlštejnem s poctivou kávou, domácími dezerty a atmosférou starých časů." },
-      { name: "author", content: "Květinová Kavárna Pe&Pa" },
-      { property: "og:title", content: "Květinová Kavárna Pe&Pa — Karlštejn 16" },
-      { property: "og:description", content: "Káva, domácí dezerty a květinová atmosféra přímo na cestě ke Karlštejnu." },
+      { title: "Lovable App" },
+      { name: "description", content: "Lovable Generated Project" },
+      { name: "author", content: "Lovable" },
+      { property: "og:title", content: "Lovable App" },
+      { property: "og:description", content: "Lovable Generated Project" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Květinová Kavárna Pe&Pa — Karlštejn 16" },
-      { name: "twitter:description", content: "Romantická kavárna pod Karlštejnem s poctivou kávou a domácími dezerty." },
+      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -102,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="cs">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
@@ -119,11 +118,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <div className="flex-1">
-          <Outlet />
-        </div>
-      </div>
+      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <Outlet />
     </QueryClientProvider>
   );
 }
