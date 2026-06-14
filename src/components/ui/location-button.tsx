@@ -10,13 +10,6 @@ export const LocationButton = () => {
     const shine = shineRef.current;
     if (!button || !shine) return;
 
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.5 });
-    tl.fromTo(
-      shine,
-      { x: "-150%", opacity: 0 },
-      { x: "150%", opacity: 0.6, duration: 1.4, ease: "power2.inOut" }
-    );
-
     const hoverIn = gsap.to(button, {
       scale: 1.06,
       boxShadow: "0 20px 40px -12px rgba(0,0,0,0.25)",
@@ -25,14 +18,24 @@ export const LocationButton = () => {
       paused: true,
     });
 
-    const onEnter = () => hoverIn.play();
-    const onLeave = () => hoverIn.reverse();
+    const onEnter = () => {
+      hoverIn.play();
+      gsap.fromTo(
+        shine,
+        { x: "-150%", opacity: 0 },
+        { x: "150%", opacity: 0.6, duration: 1.4, ease: "power2.inOut" }
+      );
+    };
+
+    const onLeave = () => {
+      hoverIn.reverse();
+      gsap.to(shine, { x: "-150%", opacity: 0, duration: 0.4, ease: "power2.in" });
+    };
 
     button.addEventListener("mouseenter", onEnter);
     button.addEventListener("mouseleave", onLeave);
 
     return () => {
-      tl.kill();
       hoverIn.kill();
       button.removeEventListener("mouseenter", onEnter);
       button.removeEventListener("mouseleave", onLeave);
