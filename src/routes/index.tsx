@@ -190,7 +190,7 @@ function ScrollTypewriter({
 }: {
   text: string;
   className?: string;
-  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+  progress: MotionValue<number>;
   start: number;
   end: number;
 }) {
