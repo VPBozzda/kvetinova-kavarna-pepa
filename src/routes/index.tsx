@@ -251,8 +251,8 @@ function OpeningHours() {
             <ScrollTypewriter
               text="9:30 až 18:00"
               progress={scrollYProgress}
-              start={0.5}
-              end={0.95}
+              start={0.42}
+              end={0.78}
             />
           </p>
         </div>
