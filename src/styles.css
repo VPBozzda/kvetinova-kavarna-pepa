@@ -101,5 +101,9 @@
   10% { opacity: 0.8; }
   100% { transform: translate(var(--dx,40px), 110vh) rotate(720deg); opacity: 0; }
 }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 @utility animate-sway { animation: sway 6s ease-in-out infinite; transform-origin: top center; }
 @utility animate-petal { animation: float-petal 14s linear infinite; }
