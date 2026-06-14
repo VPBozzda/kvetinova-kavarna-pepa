@@ -422,6 +422,7 @@ function Index() {
       <Petals />
       <Hero />
       <Story />
+      <OpeningHours />
       <OwnersHero />
       <Menu />
       <Gallery />
