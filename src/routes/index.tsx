@@ -14,6 +14,10 @@ import img2351 from "@/assets/IMG_2351.asset.json";
 import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
 import { HoverInfo } from "@/components/ui/hover-info";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -122,8 +126,8 @@ function Hero() {
           Vše děláme ručně, pomalu a od srdce.
         </p>
 
-        <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur">
-          Všechny dobroty vám rádi zabalíme <span className="mx-1 font-script text-lg normal-case tracking-normal text-rose">s sebou</span> na hrad
+        <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream backdrop-blur">
+          S sebou
         </HoverInfo>
       </motion.div>
 
@@ -177,6 +181,42 @@ function Story() {
   );
 }
 
+function OwnersHero() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1.15, 1]);
+
+  return (
+    <section ref={ref} className="relative h-[85vh] overflow-hidden">
+      <motion.img
+        src={owners.url}
+        alt="Pepina & Pavla u dveří kavárny"
+        style={{ y, scale }}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
+
+      <motion.div
+        style={{ opacity }}
+        className="relative z-10 flex h-full flex-col justify-end px-8 pb-16 md:px-16 md:pb-24"
+      >
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/80">
+          Vaše hostitelky
+        </span>
+        <h2 className="mt-2 text-5xl leading-[0.95] text-cream md:text-7xl">
+          Pepina <span className="font-script text-rose">&amp;</span> Pavla
+        </h2>
+        <p className="mt-4 max-w-md font-display text-lg leading-relaxed text-cream/90 md:text-xl">
+          Každý den otevírají dveře s úsměvem a voňavou kávou. Přijďte poznat jejich kouzlo.
+        </p>
+      </motion.div>
+    </section>
+  );
+}
+
 function MenuBoard({ title, items }: { title: string; items: [string, string | number][] }) {
   return (
     <motion.div
@@ -224,8 +264,36 @@ function Menu() {
 }
 
 function Gallery() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const getScrollWidth = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+    const tween = gsap.to(track, {
+      x: () => -getScrollWidth(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: () => `+=${getScrollWidth()}`,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
   const items = [
-    { src: owners.url, alt: "Pepina & Pavla u dveří kavárny" },
     { src: glassware.url, alt: "Staré sklo a cukřenka" },
     { src: img2345.url, alt: "Zahrádka kavárny" },
     { src: img2349.url, alt: "Interiér kavárny" },
@@ -235,43 +303,39 @@ function Gallery() {
     { src: img2348.url, alt: "Karlštejn ulice" },
     { src: img2351.url, alt: "Květinový věnec" },
   ];
+
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-6 text-center">
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-background">
+      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 pt-10 text-center md:pt-14">
         <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Atmosféra</span>
         <h2 className="mt-3 text-5xl md:text-6xl">U <em className="text-rose">nás</em></h2>
         <p className="mt-3 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          ← táhněte / scroll →
+          scroll ↓
         </p>
       </div>
 
-      <div className="mt-12 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth [scrollbar-width:thin]">
-        <div className="flex gap-6 px-[8vw]">
-          {items.map((it, i) => (
-            <motion.figure
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: (i % 5) * 0.05 }}
-              className="paper-card group relative shrink-0 snap-center overflow-hidden rounded-md p-2"
-              style={{
-                width: "clamp(260px, 70vw, 460px)",
-                transform: `rotate(${i % 2 === 0 ? -1.2 : 1.2}deg)`,
-              }}
-            >
-              <img
-                src={it.src}
-                alt={it.alt}
-                loading="lazy"
-                className="h-[60vh] max-h-[520px] w-full rounded-sm object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <figcaption className="mt-2 text-center font-script text-xl text-rose">
-                {it.alt}
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
+      <div ref={trackRef} className="flex h-full items-center gap-6 px-[8vw] pt-20 md:gap-8 md:px-[10vw]">
+        {items.map((it, i) => (
+          <figure
+            key={i}
+            className="paper-card group relative shrink-0 overflow-hidden rounded-md p-2"
+            style={{
+              width: "clamp(260px, 35vw, 420px)",
+              height: "clamp(300px, 55vh, 480px)",
+              transform: `rotate(${i % 2 === 0 ? -1.2 : 1.2}deg)`,
+            }}
+          >
+            <img
+              src={it.src}
+              alt={it.alt}
+              loading="lazy"
+              className="h-full w-full rounded-sm object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <figcaption className="absolute bottom-3 left-0 right-0 text-center font-script text-lg text-rose drop-shadow md:text-xl">
+              {it.alt}
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );
@@ -331,6 +395,7 @@ function Index() {
       <Petals />
       <Hero />
       <Story />
+      <OwnersHero />
       <Menu />
       <Gallery />
       <Footer />
