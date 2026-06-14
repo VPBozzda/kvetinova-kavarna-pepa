@@ -3,12 +3,10 @@ import gsap from "gsap";
 
 export const LocationButton = () => {
   const buttonRef = useRef<HTMLAnchorElement>(null);
-  const shineRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const button = buttonRef.current;
-    const shine = shineRef.current;
-    if (!button || !shine) return;
+    if (!button) return;
 
     const hoverIn = gsap.to(button, {
       scale: 1.05,
@@ -18,18 +16,8 @@ export const LocationButton = () => {
       paused: true,
     });
 
-    const onEnter = () => {
-      hoverIn.play();
-      gsap.fromTo(
-        shine,
-        { x: "-200%" },
-        { x: "200%", duration: 0.8, ease: "power3.inOut" }
-      );
-    };
-
-    const onLeave = () => {
-      hoverIn.reverse();
-    };
+    const onEnter = () => hoverIn.play();
+    const onLeave = () => hoverIn.reverse();
 
     button.addEventListener("mouseenter", onEnter);
     button.addEventListener("mouseleave", onLeave);
@@ -50,12 +38,12 @@ export const LocationButton = () => {
       className="group relative inline-flex items-center overflow-hidden rounded-full border border-cream/10 bg-ink/90 px-8 py-3.5 font-sans-ui text-xs font-semibold uppercase tracking-[0.25em] text-cream/90 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-colors hover:bg-ink"
     >
       <span className="relative z-10">TADY NÁS NAJDETE</span>
-      <span
-        ref={shineRef}
-        className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2"
+      <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.18) 55%, transparent 100%)",
+            "linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.08) 65%, transparent 75%)",
+          backgroundSize: "250% 100%",
+          animation: "shimmer 1.2s ease-in-out infinite",
         }}
       />
     </a>
