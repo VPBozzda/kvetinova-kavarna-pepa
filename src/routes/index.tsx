@@ -132,9 +132,9 @@ function Hero() {
           </span>
         </h1>
 
-        <p className="mt-8 max-w-2xl font-display text-xl leading-relaxed text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:text-2xl">
-          Zastavte se na babiččin koláč a poctivou kávu přímo na cestě na Karlštejn.
-          Vše děláme ručně, pomalu a od srdce.
+        <p className="mt-8 min-h-[6rem] max-w-2xl font-display text-xl leading-relaxed text-cream/95 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)] md:min-h-[7rem] md:text-2xl">
+          {shown}
+          <span className="ml-0.5 inline-block w-[2px] -translate-y-1 animate-pulse bg-rose align-middle" style={{ height: "1.1em" }} />
         </p>
 
         <p className="mt-8 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream/90">
