@@ -14,6 +14,10 @@ import img2351 from "@/assets/IMG_2351.asset.json";
 import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
 import { HoverInfo } from "@/components/ui/hover-info";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/")({
   head: () => ({
