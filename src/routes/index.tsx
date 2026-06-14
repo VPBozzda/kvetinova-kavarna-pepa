@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LocationButton } from "@/components/ui/location-button";
 import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import Lenis from "lenis";
@@ -129,6 +130,10 @@ function Hero() {
         <p className="mt-8 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream/90">
           Objednávku vám rádi zabalíme s sebou
         </p>
+
+        <div className="mt-6">
+          <LocationButton />
+        </div>
       </motion.div>
 
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
