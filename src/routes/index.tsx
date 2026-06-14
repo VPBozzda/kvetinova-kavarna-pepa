@@ -109,7 +109,7 @@ function Hero() {
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
       >
         <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/90">
-          Karlštejn · č.p. 16
+          KARLŠTEJN · Č.P. 16 | POD HRADEM
         </span>
         <h1 className="mt-4 text-[clamp(2.5rem,9vw,6.5rem)] leading-[0.9] drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
           <span className="block italic text-cream">Květinová</span>
