@@ -181,6 +181,33 @@ function Story() {
   );
 }
 
+function OpeningHours() {
+  return (
+    <section className="relative py-20 md:py-28">
+      <div className="mx-auto max-w-4xl px-6 text-center">
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-moss">Návštěva</span>
+        <h2 className="mt-3 text-5xl md:text-6xl">Kdy jsme <em className="text-rose">otevřeni</em></h2>
+
+        <div className="mt-10 inline-block rounded-lg border border-border bg-cream/70 px-10 py-8 shadow-sm backdrop-blur-sm">
+          <p className="font-display text-2xl leading-relaxed text-foreground md:text-3xl">
+            <span className="font-script text-4xl text-rose md:text-5xl">Sobota</span>
+            <span className="mx-3 text-muted-foreground">—</span>
+            <span className="font-script text-4xl text-rose md:text-5xl">Neděle</span>
+          </p>
+          <div className="mx-auto mt-4 h-px w-16 bg-border" />
+          <p className="mt-4 font-sans-ui text-lg tracking-wider text-foreground md:text-xl">
+            9:30 <span className="text-muted-foreground">až</span> 18:00
+          </p>
+        </div>
+
+        <p className="mt-8 font-display text-lg italic text-muted-foreground">
+          Těšíme se na vás každý víkend pod karlštejnským kopcem.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function OwnersHero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
