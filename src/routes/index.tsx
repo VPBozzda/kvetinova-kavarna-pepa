@@ -13,6 +13,7 @@ import img2350 from "@/assets/IMG_2350.asset.json";
 import img2351 from "@/assets/IMG_2351.asset.json";
 import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
+import interior from "@/assets/interior-table.asset.json";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
