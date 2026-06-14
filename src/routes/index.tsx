@@ -225,7 +225,7 @@ function CharSpan({
 
 function OpeningHours() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.4"] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.98", "end 0.3"] });
 
   return (
     <section ref={ref} className="relative py-20 md:py-28">
