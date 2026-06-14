@@ -13,7 +13,7 @@ import img2350 from "@/assets/IMG_2350.asset.json";
 import img2351 from "@/assets/IMG_2351.asset.json";
 import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
-import { HoverInfo } from "@/components/ui/hover-info";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -350,7 +350,7 @@ function Footer() {
           Karlštejn 16 · pod hradem · Česká republika
         </p>
         <p className="mt-1 font-sans-ui text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          otevřeno denně · order at bar · objednávky uvnitř
+          Sobota – Neděle 9:30 – 18:00 · order at bar · objednávky uvnitř
         </p>
 
         <div className="mx-auto mt-8 h-px w-24 bg-border" />
