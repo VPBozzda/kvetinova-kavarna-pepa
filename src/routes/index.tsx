@@ -196,20 +196,12 @@ function ScrollTypewriter({
 }) {
   const chars = Array.from(text);
   const reveal = useTransform(progress, [start, end], [0, chars.length], { clamp: true });
-  const cursorOpacity = useTransform(reveal, (v) => (v >= chars.length ? 0 : 1));
 
   return (
     <span className={className} aria-label={text}>
       {chars.map((c, i) => (
         <CharSpan key={i} index={i} reveal={reveal} char={c} />
       ))}
-      <motion.span
-        style={{ opacity: cursorOpacity }}
-        className="ml-0.5 inline-block animate-pulse text-rose"
-        aria-hidden
-      >
-        |
-      </motion.span>
     </span>
   );
 }
