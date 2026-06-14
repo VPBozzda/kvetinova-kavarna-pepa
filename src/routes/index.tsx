@@ -225,7 +225,7 @@ function CharSpan({
 
 function OpeningHours() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.4"] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.98", "end 0.3"] });
 
   return (
     <section ref={ref} className="relative py-20 md:py-28">
@@ -236,7 +236,7 @@ function OpeningHours() {
             text="Kdy jsme otevřeni"
             progress={scrollYProgress}
             start={0.0}
-            end={0.45}
+            end={0.36}
           />
         </h2>
 
@@ -251,8 +251,8 @@ function OpeningHours() {
             <ScrollTypewriter
               text="9:30 až 18:00"
               progress={scrollYProgress}
-              start={0.5}
-              end={0.95}
+              start={0.42}
+              end={0.78}
             />
           </p>
         </div>
