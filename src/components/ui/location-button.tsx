@@ -47,27 +47,9 @@ export const LocationButton = () => {
       href="https://maps.app.goo.gl/WrQjicdxU1uv1oSHA"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="TADY NÁS NAJDETE"
-      className="group relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-cream/10 bg-ink/90 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-colors hover:bg-ink"
+      className="group relative inline-flex items-center overflow-hidden rounded-full border border-cream/10 bg-ink/90 px-8 py-3.5 font-sans-ui text-xs font-semibold uppercase tracking-[0.25em] text-cream/90 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-colors hover:bg-ink"
     >
-      <svg
-        className="relative z-10 h-5 w-5 text-cream/90"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-        />
-      </svg>
+      <span className="relative z-10">TADY NÁS NAJDETE</span>
       <span
         ref={shineRef}
         className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2"
