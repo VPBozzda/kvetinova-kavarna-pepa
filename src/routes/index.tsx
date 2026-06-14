@@ -220,7 +220,7 @@ function CharSpan({
   char,
 }: {
   index: number;
-  reveal: ReturnType<typeof useTransform<number, number>>;
+  reveal: MotionValue<number>;
   char: string;
 }) {
   const opacity = useTransform(reveal, (v) => (v > index ? 1 : 0));
