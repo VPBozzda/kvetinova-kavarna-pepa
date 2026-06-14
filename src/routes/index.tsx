@@ -127,7 +127,7 @@ function Hero() {
         </p>
 
         <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream backdrop-blur">
-          S sebou na hrad
+          S sebou
         </HoverInfo>
       </motion.div>
 
