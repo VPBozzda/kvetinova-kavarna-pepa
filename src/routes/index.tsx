@@ -126,8 +126,8 @@ function Hero() {
           Vše děláme ručně, pomalu a od srdce.
         </p>
 
-        <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm uppercase tracking-[0.3em] text-cream backdrop-blur">
-          Všechny dobroty vám rádi zabalíme <span className="mx-1 font-script text-lg normal-case tracking-normal text-rose">s sebou</span> na hrad
+        <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream backdrop-blur">
+          S sebou na hrad
         </HoverInfo>
       </motion.div>
 
@@ -177,6 +177,42 @@ function Story() {
           <p className="mt-4 font-script text-3xl text-rose">— S láskou, Pe &amp; Pa</p>
         </div>
       </div>
+    </section>
+  );
+}
+
+function OwnersHero() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1.15, 1]);
+
+  return (
+    <section ref={ref} className="relative h-[85vh] overflow-hidden">
+      <motion.img
+        src={owners.url}
+        alt="Pepina & Pavla u dveří kavárny"
+        style={{ y, scale }}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
+
+      <motion.div
+        style={{ opacity }}
+        className="relative z-10 flex h-full flex-col justify-end px-8 pb-16 md:px-16 md:pb-24"
+      >
+        <span className="font-sans-ui text-xs uppercase tracking-[0.4em] text-cream/80">
+          Vaše hostitelky
+        </span>
+        <h2 className="mt-2 text-5xl leading-[0.95] text-cream md:text-7xl">
+          Pepina <span className="font-script text-rose">&amp;</span> Pavla
+        </h2>
+        <p className="mt-4 max-w-md font-display text-lg leading-relaxed text-cream/90 md:text-xl">
+          Každý den otevírají dveře s úsměvem a voňavou kávou. Přijďte poznat jejich kouzlo.
+        </p>
+      </motion.div>
     </section>
   );
 }
