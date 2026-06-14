@@ -15,10 +15,6 @@ import owners from "@/assets/owners.asset.json";
 import glassware from "@/assets/glassware.asset.json";
 import interior from "@/assets/interior-table.asset.json";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/")({
   head: () => ({
