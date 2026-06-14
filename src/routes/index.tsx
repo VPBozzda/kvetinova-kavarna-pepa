@@ -126,9 +126,9 @@ function Hero() {
           Vše děláme ručně, pomalu a od srdce.
         </p>
 
-        <HoverInfo className="mt-8 rounded-full border border-cream/60 bg-cream/10 px-7 py-3 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream backdrop-blur">
-          S sebou
-        </HoverInfo>
+        <p className="mt-8 font-sans-ui text-sm font-medium uppercase tracking-[0.3em] text-cream/90">
+          Objednávku vám rádi zabalíme s sebou
+        </p>
       </motion.div>
 
       <div className="pointer-events-none absolute left-2 top-0 h-40 w-2 origin-top animate-sway bg-gradient-to-b from-moss/40 to-transparent" />
