@@ -34,7 +34,7 @@ export const LocationButton = () => {
     button.addEventListener("mouseenter", onEnter);
     button.addEventListener("mouseleave", onLeave);
 
-    return () => email {
+    return () => {
       hoverIn.kill();
       button.removeEventListener("mouseenter", onEnter);
       button.removeEventListener("mouseleave", onLeave);
