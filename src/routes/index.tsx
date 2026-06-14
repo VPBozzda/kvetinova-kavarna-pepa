@@ -395,6 +395,7 @@ function Index() {
       <Petals />
       <Hero />
       <Story />
+      <OwnersHero />
       <Menu />
       <Gallery />
       <Footer />
