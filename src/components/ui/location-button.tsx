@@ -4,21 +4,21 @@ export const LocationButton = () => {
 
   return (
 
-    <a 
+    <a
 
-      href="https://maps.app.goo.gl/WrQjicdxU1uv1oSHA" 
+      href="https://maps.app.goo.gl/WrQjicdxU1uv1oSHA"
 
-      target="_blank" 
+      target="_blank"
 
-      rel="noopener noreferrer" 
+      rel="noopener noreferrer"
 
-      className="button01 inline-block bg-white text-pink-500 border border-pink-100 shadow-sm"
+      className="button01 inline-block"
 
     >
 
       <span className="button01_bg">
 
-        <span className="button01_bg-mid bg-white"></span>
+        <span className="button01_bg-mid"></span>
 
         <span className="button01_bg-right">
 
@@ -30,7 +30,7 @@ export const LocationButton = () => {
 
               style={{ '--index': Math.floor(Math.random() * 4) } as React.CSSProperties}
 
-              className="button01_bg-pixel !bg-pink-400"
+              className="button01_bg-pixel"
 
             ></span>
 
@@ -46,9 +46,9 @@ export const LocationButton = () => {
 
               key={`overlay-${index}`}
 
-              style={{ '--index': 4 + Math.floor(Math.random() * 4) } as React.CSSProperties}
+              style={{ '--index': 4 + Math.floor(Math.random() * 4) }as React.CSSProperties}
 
-              className="button01_bg-pixel !bg-pink-300"
+              className="button01_bg-pixel"
 
             ></span>
 
@@ -58,9 +58,9 @@ export const LocationButton = () => {
 
       </span>
 
-      <span data-text="jsme tady" className="button01_inner !text-pink-500">
+      <span data-text="TADY NÁS NAJDETE" className="button01_inner">
 
-        <span className="button01_text !text-pink-500 font-semibold">jsme tady</span>
+        <span className="button01_text">TADY NÁS NAJDETE</span>
 
       </span>
 
